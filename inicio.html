@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#0a6772">
+  <title>Super 8 Pádel - Inicio</title>
+  <style>
+    :root {
+      --caribbean: #0a6772;
+      --cambridge: #99bdb0;
+      --ecru: #dcc27f;
+      --sienna: #df8869;
+      --redwood: #a44a47;
+      --bg: #f7f4ee;
+      --card: #fffdf9;
+      --text: #2f3a3c;
+      --muted: #6f7d7b;
+      --border: #d7ddd8;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: var(--caribbean);
+      color: #fff;
+      padding: 16px;
+    }
+
+    header .wrap,
+    main,
+    footer .wrap {
+      max-width: 760px;
+      margin: auto;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    header small {
+      color: #e7f1ee;
+    }
+
+    main {
+      padding: 16px 16px 30px;
+    }
+
+    footer {
+      padding: 10px 16px 28px;
+      color: var(--redwood);
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 5px 20px rgba(10, 103, 114, .09);
+      border: 1px solid rgba(153, 189, 176, .35);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--caribbean);
+      margin: 0 0 5px 2px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--cambridge);
+      border-radius: 12px;
+      font-size: 16px;
+      background: #fffefa;
+      color: var(--text);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--caribbean);
+      box-shadow: 0 0 0 3px rgba(10, 103, 114, .12);
+    }
+
+    button,
+    a.btn {
+      display: inline-block;
+      text-decoration: none;
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: var(--caribbean);
+      color: #fff;
+    }
+
+    .primary:hover {
+      background: #085761;
+    }
+
+    .secondary {
+      background: var(--cambridge);
+      color: #163c3f;
+    }
+
+    .secondary:hover {
+      background: #89aea0;
+    }
+
+    .danger {
+      background: var(--redwood);
+      color: #fff;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .match {
+      background: #f3f8f6;
+      border: 1px solid var(--cambridge);
+      border-radius: 15px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .match strong {
+      color: var(--caribbean);
+    }
+
+    .teams {
+      display: grid;
+      grid-template-columns: 1fr 52px 18px 52px 1fr;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .team {
+      text-align: center;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .score input {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 8px 3px;
+      border-color: var(--ecru);
+    }
+
+    .dash {
+      text-align: center;
+      color: var(--sienna);
+      font-weight: bold;
+    }
+
+    .tablewrap {
+      overflow: auto;
+      border: 1px solid var(--cambridge);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+    }
+
+    th,
+    td {
+      padding: 10px 7px;
+      border-bottom: 1px solid #dde7e2;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    th {
+      background: var(--cambridge);
+      color: #173c3f;
+      font-size: 12px;
+    }
+
+    th:first-child,
+    td:first-child {
+      text-align: left;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #fbf8f1;
+    }
+
+    .progress {
+      height: 10px;
+      background: #eadfbf;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      background: var(--sienna);
+    }
+
+    .podiumHero {
+      background: linear-gradient(135deg, var(--caribbean), #0d7a83);
+      color: white;
+      border-radius: 24px;
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(10, 103, 114, .18);
+    }
+
+    .podiumHero h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .podiumHero p {
+      margin: 0;
+      color: #e7f1ee;
+    }
+
+    .podium {
+      display: grid;
+      gap: 12px;
+    }
+
+    .place {
+      background: var(--card);
+      border: 1px solid var(--cambridge);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 5px 20px rgba(10, 103, 114, .07);
+      text-align: center;
+    }
+
+    .place.first {
+      padding: 24px;
+      background: linear-gradient(180deg, #fff9e8, #fffdf9);
+      border-color: var(--ecru);
+    }
+
+    .place:nth-child(2) {
+      border-color: var(--cambridge);
+    }
+
+    .place:nth-child(3) {
+      border-color: var(--sienna);
+    }
+
+    .medal {
+      font-size: 40px;
+    }
+
+    .place strong {
+      display: block;
+      font-size: 20px;
+      margin: 5px 0;
+      color: var(--caribbean);
+    }
+
+    h2 {
+      color: var(--caribbean);
+    }
+
+    @media(max-width:560px) {
+      .grid {
+        grid-template-columns: 1fr
+      }
+
+      .teams {
+        grid-template-columns: 1fr 46px 14px 46px 1fr
+      }
+
+      .team {
+        font-size: 12px
+      }
+
+      main {
+        padding: 12px 12px 24px
+      }
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      background: rgba(255, 255, 255, .16);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, .25);
+      border-radius: 12px;
+      padding: 9px 11px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .home-link:hover {
+      background: rgba(255, 255, 255, .24);
+    }
+
+    .start-card {
+      text-align: center;
+      padding: 26px 18px;
+    }
+
+    .start-card .logo {
+      width: 76px;
+      height: 76px;
+      border-radius: 24px;
+      margin: 0 auto 14px;
+      display: grid;
+      place-items: center;
+      background: var(--caribbean);
+      color: white;
+      font-size: 34px;
+      font-weight: bold;
+      box-shadow: 0 8px 24px rgba(10, 103, 114, .18);
+    }
+
+    .start-card h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .start-card p {
+      max-width: 500px;
+      margin: 0 auto 20px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .start-actions {
+      display: grid;
+      gap: 10px;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+
+    .start-actions a,
+    .start-actions button {
+      width: 100%;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap">
+      <h1>🎾 Super 8 Padel</h1>
+      <small>Inicio</small>
+    </div>
+  </header>
+
+  <main>
+    <div class="card start-card">
+      <div class="logo">8</div>
+      <h2>Super 8 Padel</h2>
+      <p>Organizá las 7 rondas, cargá los resultados y obtené automáticamente la clasificación y el podio final.</p>
+
+      <div class="start-actions">
+        <button class="primary" onclick="nuevoTorneo()">🎾 Nuevo torneo</button>
+        <a id="continueBtn" class="btn secondary" href="rondas.html" style="display:none">▶ Continuar torneo</a>
+      </div>
+    </div>
+
+    <div id="currentInfo" class="card" style="display:none">
+      <h2>Torneo en curso</h2>
+      <div id="currentText" class="muted"></div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">© Dana Grecco</div>
+  </footer>
+
+  <script>
+    function nuevoTorneo() {
+      const actual = localStorage.getItem('super8_current');
+      if (actual) {
+        if (!confirm('¿Querés comenzar un torneo nuevo? Se borrarán los datos del torneo actual que no hayas guardado por otro medio.')) return;
+      }
+      localStorage.removeItem('super8_current');
+      localStorage.removeItem('super8_round');
+      location.href = 'jugadoras.html';
+    }
+
+    const data = JSON.parse(localStorage.getItem('super8_current') || 'null');
+    if (data && data.players && data.players.length === 8) {
+      document.getElementById('continueBtn').style.display = 'block';
+      document.getElementById('currentInfo').style.display = 'block';
+      const loaded = Object.keys(data.results || {}).length;
+      document.getElementById('currentText').innerHTML =
+        '<strong>' + (data.name || 'Super 8 Pádel') + '</strong><br>' +
+        (data.date ? 'Fecha: ' + data.date + '<br>' : '') +
+        'Partidos cargados: ' + loaded + ' / 14';
+    }
+  </script>
+</body>
+
+</html>
