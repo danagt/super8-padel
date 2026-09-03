@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Super 8 - Rondas</title>
+  <title>Super 8 - Historial</title>
   <style>
     :root {
       --caribbean: #0a6772;
@@ -458,27 +458,42 @@
     <div class="wrap">
       <div class="header-row">
         <div>
-          <h1>🎾 Super 8 Padel</h1><small id="subtitle">Rondas</small>
-        </div><a class="btn ghost" href="inicio.html" onclick="return saveBeforeHome()">🏠 Inicio</a>
+          <h1>📋 Super 8 Padel</h1><small>Historial de torneos</small>
+        </div><a class="btn ghost" href="inicio.html">🏠 Inicio</a>
       </div>
     </div>
   </header>
   <main>
     <div class="card">
-      <h2 id="title"></h2>
-      <div class="muted" id="targetInfo"></div>
-      <div class="progress"><span id="bar"></span></div>
-      <div class="muted" id="prog"></div>
-      <div id="matches"></div>
-      <div class="actions"><button class="secondary" onclick="prev()">← Anterior</button><button class="secondary"
-          onclick="next()">Siguiente →</button><button class="primary" onclick="goResults()">Ver clasificación</button>
-      </div>
+      <h2>Torneos guardados</h2>
+      <div id="list"></div>
     </div>
   </main>
   <footer>
     <div class="wrap">© Dana Grecco</div>
   </footer>
   <script>
+    function getTournaments() { return JSON.parse(localStorage.getItem('super8_tournaments') || '[]'); }
+    function setTournaments(list) { localStorage.setItem('super8_tournaments', JSON.stringify(list)); }
+    function getCurrentId() { return localStorage.getItem('super8_current_id'); }
+    function setCurrentId(id) { localStorage.setItem('super8_current_id', String(id)); }
+    function getCurrentTournament() {
+      const id = getCurrentId();
+      if (!id) return null;
+      return getTournaments().find(t => String(t.id) === String(id)) || null;
+    }
+    function saveTournamentObject(t) {
+      const list = getTournaments();
+      const idx = list.findIndex(x => String(x.id) === String(t.id));
+      if (idx >= 0) list[idx] = t; else list.unshift(t);
+      setTournaments(list);
+    }
+    function formatDate(v) {
+      if (!v) return '';
+      const p = v.split('-');
+      return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : v;
+    }
+
     const individualFixture = [
       [[1, 2, 3, 4], [5, 6, 7, 8]],
       [[1, 3, 5, 7], [2, 4, 6, 8]],
@@ -511,80 +526,13 @@
       return data.players[id - 1];
     }
 
-    function getTournaments() { return JSON.parse(localStorage.getItem('super8_tournaments') || '[]'); }
-    function setTournaments(list) { localStorage.setItem('super8_tournaments', JSON.stringify(list)); }
-    function getCurrentId() { return localStorage.getItem('super8_current_id'); }
-    function setCurrentId(id) { localStorage.setItem('super8_current_id', String(id)); }
-    function getCurrentTournament() {
-      const id = getCurrentId();
-      if (!id) return null;
-      return getTournaments().find(t => String(t.id) === String(id)) || null;
-    }
-    function saveTournamentObject(t) {
-      const list = getTournaments();
-      const idx = list.findIndex(x => String(x.id) === String(t.id));
-      if (idx >= 0) list[idx] = t; else list.unshift(t);
-      setTournaments(list);
-    }
-    function formatDate(v) {
-      if (!v) return '';
-      const p = v.split('-');
-      return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : v;
-    }
-
-    let data = getCurrentTournament(); if (!data) location.href = 'inicio.html';
-    let fixture = getFixture(data), current = Number(localStorage.getItem('super8_round') || 0); data.results = data.results || {};
-
-    function validatePair(aRaw, bRaw) {
-      if (aRaw === '' && bRaw === '') return { empty: true };
-      if (aRaw === '' || bRaw === '') return { valid: false, msg: 'Completá ambos puntajes.' };
-      const a = Number(aRaw), b = Number(bRaw), target = Number(data.target);
-      if (!Number.isInteger(a) || !Number.isInteger(b)) return { valid: false, msg: 'Los puntajes deben ser números enteros.' };
-      if (a < 0 || b < 0) return { valid: false, msg: 'No se permiten valores negativos.' };
-      if (a === b) return { valid: false, msg: 'El partido no puede terminar empatado.' };
-      if (a > target || b > target) return { valid: false, msg: `Ningún puntaje puede superar ${target}.` };
-      if (!((a === target && b < target) || (b === target && a < target))) return { valid: false, msg: `Uno de los dos resultados debe ser exactamente ${target}.` };
-      return { valid: true, a, b };
-    }
     function render() {
-      document.getElementById('title').textContent = `Ronda ${current + 1} de 7`;
-      document.getElementById('subtitle').textContent = `${data.mode === 'pairs' ? 'Por parejas' : 'Individual'} · Ronda ${current + 1}`;
-      document.getElementById('targetInfo').textContent = `Partidos a ${data.target} puntos`;
-      let out = '';
-      fixture[current].forEach((m, mi) => {
-        const id = `r${current + 1}m${mi + 1}`, z = data.results[id] || {};
-        let left, right;
-        if (data.mode === 'pairs') { left = displayEntity(data, m[0]); right = displayEntity(data, m[1]); }
-        else { left = `${displayEntity(data, m[0])} + ${displayEntity(data, m[1])}`; right = `${displayEntity(data, m[2])} + ${displayEntity(data, m[3])}`; }
-        out += `<div class="match"><div class="match-title">Partido ${mi + 1}</div><div class="teams">
-  <div class="team">${left}</div>
-  <div class="score"><input id="${id}a" type="number" min="0" max="${data.target}" step="1" value="${z.a ?? ''}"></div>
-  <div class="dash">-</div>
-  <div class="score"><input id="${id}b" type="number" min="0" max="${data.target}" step="1" value="${z.b ?? ''}"></div>
-  <div class="team">${right}</div></div>
-  <div class="status ${z.valid ? 'ok' : (z.error ? 'error' : '')}" id="${id}s">${z.valid ? 'Resultado válido' : (z.error || 'Resultado pendiente')}</div></div>`;
-      });
-      document.getElementById('matches').innerHTML = out; progress();
+      const list = getTournaments(), el = document.getElementById('list');
+      if (!list.length) { el.innerHTML = '<p class="muted">Todavía no hay torneos guardados.</p>'; return; }
+      el.innerHTML = list.map(t => { const valid = Object.values(t.results || {}).filter(x => x.valid).length, total = totalMatches(t); return `<div class="history-item"><div class="history-top"><div><div class="history-name">${t.name}</div><div class="muted">${t.mode === 'pairs' ? 'Por parejas' : 'Individual'} · ${formatDate(t.date)} · ${t.target} puntos · ${valid}/${total} partidos</div><div style="margin-top:6px"><span class="badge ${t.status === 'Finalizado' ? 'done' : 'running'}">${t.status}</span></div></div></div><div class="actions"><button class="secondary" onclick="openTournament('${t.id}')">${t.status === 'Finalizado' ? 'Abrir' : 'Continuar'}</button><button class="danger" onclick="deleteTournament('${t.id}')">Eliminar</button></div></div>`; }).join('');
     }
-    function saveRound(blockOnError = true) {
-      let hasError = false;
-      fixture[current].forEach((m, mi) => {
-        const id = `r${current + 1}m${mi + 1}`, a = document.getElementById(id + 'a').value, b = document.getElementById(id + 'b').value, r = validatePair(a, b), s = document.getElementById(id + 's');
-        if (r.empty) { delete data.results[id]; s.textContent = 'Resultado pendiente'; s.className = 'status'; return; }
-        if (!r.valid) { data.results[id] = { a: a === '' ? '' : Number(a), b: b === '' ? '' : Number(b), valid: false, error: r.msg }; s.textContent = r.msg; s.className = 'status error'; hasError = true; return; }
-        data.results[id] = { a: r.a, b: r.b, valid: true }; s.textContent = 'Resultado válido'; s.className = 'status ok';
-      });
-      const validCount = Object.values(data.results).filter(x => x.valid).length;
-      data.status = validCount === totalMatches(data) ? 'Finalizado' : 'En curso';
-      saveTournamentObject(data); progress();
-      if (hasError && blockOnError) alert('Hay resultados inválidos o incompletos en esta ronda. Corregilos antes de continuar.');
-      return !hasError;
-    }
-    function progress() { const n = Object.values(data.results).filter(x => x.valid).length, total = totalMatches(data); document.getElementById('prog').textContent = `${n} / ${total} partidos válidos cargados`; document.getElementById('bar').style.width = `${n / total * 100}%`; }
-    function prev() { if (!saveRound(true)) return; if (current > 0) current--; localStorage.setItem('super8_round', current); render(); }
-    function next() { if (!saveRound(true)) return; if (current < 6) current++; else return goResults(); localStorage.setItem('super8_round', current); render(); }
-    function goResults() { if (!saveRound(true)) return; location.href = 'resultados.html'; }
-    function saveBeforeHome() { saveRound(false); return true; }
+    function openTournament(id) { setCurrentId(id); const t = getCurrentTournament(); if (!t) return; if (t.status === 'Finalizado') location.href = 'resultados.html'; else location.href = 'rondas.html'; }
+    function deleteTournament(id) { const t = getTournaments().find(x => String(x.id) === String(id)); if (!t) return; if (!confirm(`¿Querés eliminar definitivamente "${t.name}"?`)) return; const list = getTournaments().filter(x => String(x.id) !== String(id)); setTournaments(list); if (String(getCurrentId()) === String(id)) localStorage.removeItem('super8_current_id'); render(); }
     render();
   </script>
 </body>
