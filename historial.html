@@ -29,7 +29,7 @@
       background: var(--bg);
       color: var(--text)
     }
-    
+
     header {
       background: var(--caribbean);
       color: #fff;
@@ -76,8 +76,13 @@
       font-size: 13px;
       color: #e7f1ee;
     }
+
     main {
       padding: 16px 16px 30px
+    }
+
+    main h2 {
+      text-align: center;
     }
 
     footer {
@@ -221,7 +226,8 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-top: 14px
+      margin-top: 14px;
+      justify-content: center;
     }
 
     .muted {
@@ -231,11 +237,14 @@
     }
 
     .badge {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 999px;
-      padding: 5px 9px;
+      padding: 5px 10px;
       font-size: 11px;
-      font-weight: bold
+      font-weight: bold;
+      white-space: nowrap;
     }
 
     .badge.running {
@@ -244,8 +253,9 @@
     }
 
     .badge.done {
-      background: #f6ead0;
-      color: #7a5a13
+      background: #f5e2e1;
+      color: var(--redwood);
+      border: 1px solid rgba(164, 74, 71, .18);
     }
 
     .match {
@@ -393,20 +403,31 @@
       border-radius: 16px;
       padding: 14px;
       margin-bottom: 10px;
-      background: #fffefa
+      background: #fffefa;
+      align-items: center;
     }
 
     .history-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start
+      display: block;
+    }
+
+    .history-top .muted {
+      text-align: center;
     }
 
     .history-name {
       font-weight: bold;
       color: var(--caribbean);
       font-size: 17px
+    }
+
+    .history-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
     }
 
     .home-grid {
@@ -447,6 +468,23 @@
       font-size: 15px
     }
 
+    svg.lucide {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+      vertical-align: middle;
+    }
+
+    button svg.lucide,
+    a.btn svg.lucide {
+      margin-right: 5px;
+    }
+
+    .header-icon svg {
+      width: 21px;
+      height: 21px;
+    }
+
     @media(max-width:600px) {
 
       .grid,
@@ -466,43 +504,64 @@
       main {
         padding: 12px 12px 24px
       }
+
+      .actions {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .actions .btn,
+      .actions button {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+      }
     }
   </style>
 </head>
 
 <body>
   <header>
-  <div class="wrap">
-    <div class="header-row">
+    <div class="wrap">
+      <div class="header-row">
 
-      <div class="header-title">
-        <span class="header-icon">📋</span>
+        <div class="header-title">
+          <span class="header-icon">
+            <i data-lucide="history"></i>
+          </span>
 
-        <div class="header-text">
-          <h1>Super 8 Padel</h1>
-          <small>Historial de torneos</small>
+          <div class="header-text">
+            <h1>Super 8 Padel</h1>
+            <small>Historial de torneos</small>
+          </div>
         </div>
+
+        <a class="btn ghost" href="inicio.html">
+          <i data-lucide="house"></i>
+          Inicio
+        </a>
+
       </div>
-
-      <a class="btn ghost" href="inicio.html">🏠 Inicio</a>
-
     </div>
-  </div>
-</header>
+  </header>
+
   <main>
     <div class="card">
-      <h2>Torneos guardados</h2>
+      <h2>Torneos finalizados</h2>
       <div id="list"></div>
     </div>
   </main>
+
   <footer>
     <div class="wrap">© 2026 Dana Grecco</div>
   </footer>
+
   <script>
-    function getTournaments() {return JSON.parse(localStorage.getItem('super8_tournaments') || '[]');}
-    function setTournaments(list) {localStorage.setItem('super8_tournaments', JSON.stringify(list));}
-    function getCurrentId() {return localStorage.getItem('super8_current_id');}
-    function setCurrentId(id) {localStorage.setItem('super8_current_id', String(id));}
+    function getTournaments() { return JSON.parse(localStorage.getItem('super8_tournaments') || '[]'); }
+    function setTournaments(list) { localStorage.setItem('super8_tournaments', JSON.stringify(list)); }
+    function getCurrentId() { return localStorage.getItem('super8_current_id'); }
+    function setCurrentId(id) { localStorage.setItem('super8_current_id', String(id)); }
     function getCurrentTournament() {
       const id = getCurrentId();
       if (!id) return null;
@@ -540,10 +599,10 @@
       [[1, 2], [3, 8], [4, 7], [5, 6]]
     ];
 
-    function getFixture(data) {return data.mode === 'pairs' ? pairsFixture : individualFixture;}
-    function totalMatches(data) {return data.mode === 'pairs' ? 28 : 14;}
-    function entityCount(data) {return 8;}
-    function entityLabel(data) {return data.mode === 'pairs' ? 'Pareja' : 'Participante';}
+    function getFixture(data) { return data.mode === 'pairs' ? pairsFixture : individualFixture; }
+    function totalMatches(data) { return data.mode === 'pairs' ? 28 : 14; }
+    function entityCount(data) { return 8; }
+    function entityLabel(data) { return data.mode === 'pairs' ? 'Pareja' : 'Participante'; }
     function displayEntity(data, id) {
       if (data.mode === 'pairs') {
         const p = data.pairs[id - 1];
@@ -553,14 +612,99 @@
     }
 
     function render() {
-      const list = getTournaments(), el = document.getElementById('list');
-      if (!list.length) {el.innerHTML = '<p class="muted">Todavía no hay torneos guardados.</p>'; return;}
-      el.innerHTML = list.map(t => {const valid = Object.values(t.results || {}).filter(x => x.valid).length, total = totalMatches(t); return `<div class="history-item"><div class="history-top"><div><div class="history-name">${t.name}</div><div class="muted">${t.mode === 'pairs' ? 'Por parejas' : 'Individual'} · ${formatDate(t.date)} · ${t.target} puntos · ${valid}/${total} partidos</div><div style="margin-top:6px"><span class="badge ${t.status === 'Finalizado' ? 'done' : 'running'}">${t.status}</span></div></div></div><div class="actions"><button class="secondary" onclick="openTournament('${t.id}')">${t.status === 'Finalizado' ? 'Abrir' : 'Continuar'}</button><button class="danger" onclick="deleteTournament('${t.id}')">Eliminar</button></div></div>`;}).join('');
+      const list = getTournaments()
+        .filter(t => t.status === 'Finalizado');
+
+      const el = document.getElementById('list');
+
+      if (!list.length) {
+        el.innerHTML = '<p class="muted">Todavía no hay torneos finalizados.</p>';
+        return;
+      }
+
+      el.innerHTML = list.map(t => {
+        const valid = Object.values(t.results || {})
+          .filter(x => x.valid).length;
+
+        const total = totalMatches(t);
+
+        return `
+          <div class="history-item">
+
+            <div class="history-top">
+
+              <div class="history-title-row">
+                <div class="history-name">
+                  ${t.name}
+                </div>
+
+                <span class="badge done">
+                  Finalizado
+                </span>
+              </div>
+
+              <div class="muted">
+                ${t.mode === 'pairs' ? 'Por parejas' : 'Individual'}
+                · ${formatDate(t.date)}
+                · ${t.target} puntos
+                · ${valid}/${total} partidos
+              </div>
+
+            </div>
+
+            <div class="actions">
+
+              <button
+                class="secondary"
+                onclick="openTournament('${t.id}')">
+                <i data-lucide="folder-open"></i>
+                Abrir
+              </button>
+
+              <button
+                class="danger"
+                onclick="deleteTournament('${t.id}')">
+                <i data-lucide="trash-2"></i>
+                Eliminar
+              </button>
+
+            </div>
+
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+
     }
-    function openTournament(id) {setCurrentId(id); const t = getCurrentTournament(); if (!t) return; if (t.status === 'Finalizado') location.href = 'resultados.html'; else location.href = 'rondas.html';}
-    function deleteTournament(id) {const t = getTournaments().find(x => String(x.id) === String(id)); if (!t) return; if (!confirm(`¿Querés eliminar definitivamente "${t.name}"?`)) return; const list = getTournaments().filter(x => String(x.id) !== String(id)); setTournaments(list); if (String(getCurrentId()) === String(id)) localStorage.removeItem('super8_current_id'); render();}
+
+    function openTournament(id) {
+      setCurrentId(id);
+      location.href = 'detalle.html';
+    }
+
+    function deleteTournament(id) {
+      const t = getTournaments().find(x => String(x.id) === String(id));
+      if (!t) return;
+
+      if (!confirm(`¿Querés eliminar definitivamente "${t.name}"?`)) return;
+
+      const list = getTournaments().filter(x => String(x.id) !== String(id));
+
+      setTournaments(list);
+
+      if (String(getCurrentId()) === String(id)) localStorage.removeItem('super8_current_id');
+      render();
+    }
     render();
+
   </script>
+
+  <script src="assets/js/lucide.min.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+
 </body>
 
 </html>

@@ -97,6 +97,18 @@
       box-shadow: 0 5px 20px rgba(10, 103, 114, .08)
     }
 
+    .result-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .result-title-row h2 {
+      margin: 0;
+    }
+
     .hero {
       background: linear-gradient(135deg, var(--caribbean), #0d7a83);
       color: white;
@@ -222,7 +234,8 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-top: 14px
+      margin-top: 14px;
+      justify-content: center;
     }
 
     .muted {
@@ -232,11 +245,14 @@
     }
 
     .badge {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 999px;
-      padding: 5px 9px;
+      padding: 5px 10px;
       font-size: 11px;
-      font-weight: bold
+      font-weight: bold;
+      white-space: nowrap;
     }
 
     .badge.running {
@@ -245,8 +261,9 @@
     }
 
     .badge.done {
-      background: #f6ead0;
-      color: #7a5a13
+      background: #f5e2e1;
+      color: var(--redwood);
+      border: 1px solid rgba(164, 74, 71, .18);
     }
 
     .match {
@@ -448,6 +465,23 @@
       font-size: 15px
     }
 
+    svg.lucide {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+      vertical-align: middle;
+    }
+
+    button svg.lucide,
+    a.btn svg.lucide {
+      margin-right: 5px;
+    }
+
+    .header-icon svg {
+      width: 21px;
+      height: 21px;
+    }
+
     @media(max-width:600px) {
 
       .grid,
@@ -467,34 +501,59 @@
       main {
         padding: 12px 12px 24px
       }
+
+      .actions {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .actions .btn,
+      .actions button {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+      }
     }
   </style>
 </head>
 
 <body>
   <header>
-  <div class="wrap">
-    <div class="header-row">
+    <div class="wrap">
+      <div class="header-row">
 
-      <div class="header-title">
-        <span class="header-icon">📊</span>
+        <div class="header-title">
+          <span class="header-icon">
+            <i data-lucide="chart-no-axes-column"></i>
+          </span>
 
-        <div class="header-text">
-          <h1>Super 8 Padel</h1>
-          <small>Resultados</small>
+          <div class="header-text">
+            <h1>Super 8 Padel</h1>
+            <small>Resultados</small>
+          </div>
         </div>
+
+        <a class="btn ghost" href="inicio.html">
+          <i data-lucide="house"></i>
+          Inicio
+        </a>
+
       </div>
-
-      <a class="btn ghost" href="inicio.html">🏠 Inicio</a>
-
     </div>
-  </div>
-</header>
+  </header>
   <main>
     <div class="card">
-      <h2 id="tname"></h2>
+
+      <div class="result-title-row">
+        <h2 id="tname"></h2>
+
+        <span id="statusBadge" class="badge"></span>
+      </div>
+
       <div id="meta" class="muted"></div>
+
     </div>
+
     <div class="card">
       <h2>Tabla de posiciones</h2>
       <div class="tablewrap">
@@ -514,9 +573,18 @@
       </div>
       <p class="muted">Desempate: ganados → diferencia → empate → juegos a favor → menos juegos en contra.</p>
     </div>
+
     <div class="card">
-      <div class="actions"><a class="btn secondary" href="rondas.html">← Corregir resultados</a><a id="podiumBtn"
-          class="btn primary" href="podio.html">Ver podio final →</a></div>
+      <div class="actions"><a class="btn secondary" href="rondas.html">
+          <i data-lucide="pencil"></i>
+          Corregir resultados
+        </a>
+        <a id="podiumBtn" class="btn primary" href="podio.html">
+          <i data-lucide="trophy"></i>
+          Ver podio final
+        </a>
+      </div>
+
       <div id="pendingMsg" class="note" style="margin-top:12px;display:none"></div>
     </div>
   </main>
@@ -524,10 +592,10 @@
     <div class="wrap">© 2026 Dana Grecco</div>
   </footer>
   <script>
-    function getTournaments() {return JSON.parse(localStorage.getItem('super8_tournaments') || '[]');}
-    function setTournaments(list) {localStorage.setItem('super8_tournaments', JSON.stringify(list));}
-    function getCurrentId() {return localStorage.getItem('super8_current_id');}
-    function setCurrentId(id) {localStorage.setItem('super8_current_id', String(id));}
+    function getTournaments() { return JSON.parse(localStorage.getItem('super8_tournaments') || '[]'); }
+    function setTournaments(list) { localStorage.setItem('super8_tournaments', JSON.stringify(list)); }
+    function getCurrentId() { return localStorage.getItem('super8_current_id'); }
+    function setCurrentId(id) { localStorage.setItem('super8_current_id', String(id)); }
     function getCurrentTournament() {
       const id = getCurrentId();
       if (!id) return null;
@@ -565,10 +633,10 @@
       [[1, 2], [3, 8], [4, 7], [5, 6]]
     ];
 
-    function getFixture(data) {return data.mode === 'pairs' ? pairsFixture : individualFixture;}
-    function totalMatches(data) {return data.mode === 'pairs' ? 28 : 14;}
-    function entityCount(data) {return 8;}
-    function entityLabel(data) {return data.mode === 'pairs' ? 'Pareja' : 'Participante';}
+    function getFixture(data) { return data.mode === 'pairs' ? pairsFixture : individualFixture; }
+    function totalMatches(data) { return data.mode === 'pairs' ? 28 : 14; }
+    function entityCount(data) { return 8; }
+    function entityLabel(data) { return data.mode === 'pairs' ? 'Pareja' : 'Participante'; }
     function displayEntity(data, id) {
       if (data.mode === 'pairs') {
         const p = data.pairs[id - 1];
@@ -581,9 +649,9 @@
       const fixture = getFixture(data), results = data.results || {};
       let s = [];
       if (data.mode === 'pairs') {
-        s = data.pairs.map((p, i) => ({id: i + 1, name: `${p.member1} / ${p.member2}`, pj: 0, pg: 0, gf: 0, gc: 0, diff: 0}));
+        s = data.pairs.map((p, i) => ({ id: i + 1, name: `${p.member1} / ${p.member2}`, pj: 0, pg: 0, gf: 0, gc: 0, diff: 0 }));
       } else {
-        s = data.players.map((name, i) => ({id: i + 1, name, pj: 0, pg: 0, gf: 0, gc: 0, diff: 0}));
+        s = data.players.map((name, i) => ({ id: i + 1, name, pj: 0, pg: 0, gf: 0, gc: 0, diff: 0 }));
       }
       let h = {};
 
@@ -602,8 +670,8 @@
         } else {
           let A = [m[0], m[1]], B = [m[2], m[3]];
           [...A, ...B].forEach(p => s[p - 1].pj++);
-          A.forEach(p => {s[p - 1].gf += z.a; s[p - 1].gc += z.b});
-          B.forEach(p => {s[p - 1].gf += z.b; s[p - 1].gc += z.a});
+          A.forEach(p => { s[p - 1].gf += z.a; s[p - 1].gc += z.b });
+          B.forEach(p => { s[p - 1].gf += z.b; s[p - 1].gc += z.a });
           if (z.a > z.b) A.forEach(p => s[p - 1].pg++);
           if (z.b > z.a) B.forEach(p => s[p - 1].pg++);
           A.forEach(a => B.forEach(b => {
@@ -635,14 +703,55 @@
       return s;
     }
 
-    const data = getCurrentTournament(); if (!data) location.href = 'inicio.html';
-    const s = calculateStats(data), validCount = Object.values(data.results || {}).filter(x => x.valid).length, total = totalMatches(data);
+    const data = getCurrentTournament();
+    if (!data) location.href = 'inicio.html';
+
+    const s = calculateStats(data),
+      validCount = Object.values(data.results || {}).filter(x => x.valid).length, total = 
+      totalMatches(data);
+
     document.getElementById('tname').textContent = data.name;
+
     document.getElementById('entityHeader').textContent = data.mode === 'pairs' ? 'Pareja' : 'Participante';
-    document.getElementById('meta').innerHTML = `${data.mode === 'pairs' ? 'Por parejas' : 'Individual'} · ${formatDate(data.date)} · Partidos a ${data.target} puntos · <span class="badge ${data.status === 'Finalizado' ? 'done' : 'running'}">${data.status}</span>`;
-    document.getElementById('ranking').innerHTML = s.map(x => `<tr><td>${x.name}</td><td>${x.pj}</td><td>${x.pg}</td><td>${x.gf}</td><td>${x.gc}</td><td>${x.diff > 0 ? '+' : ''}${x.diff}</td></tr>`).join('');
-    if (validCount !== total) {document.getElementById('podiumBtn').style.display = 'none'; document.getElementById('pendingMsg').style.display = 'block'; document.getElementById('pendingMsg').textContent = `Faltan ${total - validCount} partido(s) válido(s). El podio se habilita al completar todos los partidos.`;}
+
+    document.getElementById('meta').textContent =
+      `${data.mode === 'pairs' ? 'Por parejas' : 'Individual'} · ` +
+      `${formatDate(data.date)} · ` +
+      `Partidos a ${data.target} puntos`;
+
+    const statusBadge = document.getElementById('statusBadge');
+
+    statusBadge.textContent = data.status;
+
+    statusBadge.className =
+      `badge ${data.status === 'Finalizado' ? 'done' : 'running'}`;
+
+    document.getElementById('ranking').innerHTML =
+      s.map(x =>
+        `<tr>
+      <td>${x.name}</td>
+      <td>${x.pj}</td>
+      <td>${x.pg}</td>
+      <td>${x.gf}</td>
+      <td>${x.gc}</td>
+      <td>${x.diff > 0 ? '+' : ''}${x.diff}</td>
+      </tr>`).join('');
+
+    if (validCount !== total) {
+      document.getElementById('podiumBtn').style.display =
+        'none';
+      document.getElementById('pendingMsg').style.display =
+        'block';
+      document.getElementById('pendingMsg').textContent =
+        `Faltan ${total - validCount} partido(s) válido(s). El podio se habilita al completar todos los partidos.`;
+    }
   </script>
+
+  <script src="assets/js/lucide.min.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+
 </body>
 
 </html>

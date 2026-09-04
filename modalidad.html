@@ -222,7 +222,8 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-top: 14px
+      margin-top: 14px;
+      justify-content: center;
     }
 
     .muted {
@@ -467,6 +468,18 @@
       main {
         padding: 12px 12px 24px
       }
+      
+      .actions {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .actions .btn,
+      .actions button {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+      }
     }
   </style>
 </head>
@@ -480,7 +493,7 @@
         <span class="header-icon">🎾</span>
 
         <div class="header-text">
-          <h1>Super 8 Pádel</h1>
+          <h1>Super 8 Padel</h1>
           <small>Elegir modalidad</small>
         </div>
       </div>
@@ -492,7 +505,7 @@
 </header>
   <main>
     <div class="card">
-      <h2>¿Cómo se juega este Super 8?</h2>
+      <h2>Seleccionar</h2>
       <div class="mode-grid">
         <div class="mode-card" onclick="choose('individual')"><span class="emoji">👤</span>
           <h3>Individual</h3>
@@ -511,6 +524,12 @@
   <script>
     function choose(mode) {localStorage.setItem('super8_new_mode', mode); location.href = 'jugadoras.html';}
   </script>
+
+  <script src="assets/js/lucide.min.js"></script>
+    <script>
+      lucide.createIcons();
+    </script>
+    
 </body>
 
 </html>

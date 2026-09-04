@@ -222,7 +222,8 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-top: 14px
+      margin-top: 14px;
+      justify-content: center;
     }
 
     .muted {
@@ -467,29 +468,42 @@
       main {
         padding: 12px 12px 24px
       }
+
+      .actions {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .actions .btn,
+      .actions button {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+      }
     }
   </style>
 </head>
 
 <body>
   <header>
-  <div class="wrap">
-    <div class="header-row">
+    <div class="wrap">
+      <div class="header-row">
 
-      <div class="header-title">
-        <span class="header-icon">🎾</span>
+        <div class="header-title">
+          <span class="header-icon">🎾</span>
 
-        <div class="header-text">
-          <h1>Super 8 Padel</h1>
-          <small id="subtitle">Rondas</small>
+          <div class="header-text">
+            <h1>Super 8 Padel</h1>
+            <small id="subtitle">Rondas</small>
+          </div>
         </div>
+
+        <a class="btn ghost" href="inicio.html" onclick="return saveBeforeHome()">🏠 Inicio</a>
+
       </div>
-
-      <a class="btn ghost" href="inicio.html" onclick="return saveBeforeHome()">🏠 Inicio</a>
-
     </div>
-  </div>
-</header>
+  </header>
+
   <main>
     <div class="card">
       <h2 id="title"></h2>
@@ -502,9 +516,11 @@
       </div>
     </div>
   </main>
+
   <footer>
     <div class="wrap">© 2026 Dana Grecco</div>
   </footer>
+  
   <script>
     const individualFixture = [
       [[1, 2, 3, 4], [5, 6, 7, 8]],
@@ -601,19 +617,32 @@
         if (!r.valid) { data.results[id] = { a: a === '' ? '' : Number(a), b: b === '' ? '' : Number(b), valid: false, error: r.msg }; s.textContent = r.msg; s.className = 'status error'; hasError = true; return; }
         data.results[id] = { a: r.a, b: r.b, valid: true }; s.textContent = 'Resultado válido'; s.className = 'status ok';
       });
+
       const validCount = Object.values(data.results).filter(x => x.valid).length;
-      data.status = validCount === totalMatches(data) ? 'Finalizado' : 'En curso';
-      saveTournamentObject(data); progress();
+      data.status = validCount === totalMatches(data)
+        ? 'Finalizado'
+        : 'En curso';
+      saveTournamentObject(data);
+
+      progress();
       if (hasError && blockOnError) alert('Hay resultados inválidos o incompletos en esta ronda. Corregilos antes de continuar.');
       return !hasError;
     }
+
     function progress() { const n = Object.values(data.results).filter(x => x.valid).length, total = totalMatches(data); document.getElementById('prog').textContent = `${n} / ${total} partidos válidos cargados`; document.getElementById('bar').style.width = `${n / total * 100}%`; }
     function prev() { if (!saveRound(true)) return; if (current > 0) current--; localStorage.setItem('super8_round', current); render(); }
     function next() { if (!saveRound(true)) return; if (current < 6) current++; else return goResults(); localStorage.setItem('super8_round', current); render(); }
     function goResults() { if (!saveRound(true)) return; location.href = 'resultados.html'; }
     function saveBeforeHome() { saveRound(false); return true; }
     render();
+
   </script>
+
+  <script src="assets/js/lucide.min.js"></script>
+    <script>
+      lucide.createIcons();
+    </script>
+    
 </body>
 
 </html>

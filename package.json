@@ -20,6 +20,7 @@
   "homepage": "https://github.com/danagt/super8-padel#readme",
   "dependencies": {
     "@capacitor/cli": "^8.5.1",
-    "@capacitor/core": "^8.5.1"
+    "@capacitor/core": "^8.5.1",
+    "lucide": "^1.41.0"
   }
 }

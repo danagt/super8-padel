@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Super 8 Pádel - Inicio</title>
+  <title>Super 8 Padel - Inicio</title>
   <style>
     :root {
       --caribbean: #0a6772;
@@ -78,6 +78,7 @@
       font-size: 13px;
       color: #e7f1ee;
     }
+
     main {
       padding: 16px 16px 30px
     }
@@ -224,7 +225,8 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-top: 14px
+      margin-top: 14px;
+      justify-content: center;
     }
 
     .muted {
@@ -234,11 +236,14 @@
     }
 
     .badge {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 999px;
-      padding: 5px 9px;
-      font-size: 11px;
-      font-weight: bold
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: bold;
+      white-space: nowrap;
     }
 
     .badge.running {
@@ -403,7 +408,7 @@
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      align-items: flex-start
+      align-items: center;
     }
 
     .history-name {
@@ -421,12 +426,6 @@
     .home-action {
       text-align: center;
       padding: 18px
-    }
-
-    .home-action .emoji {
-      font-size: 32px;
-      display: block;
-      margin-bottom: 8px
     }
 
     .note {
@@ -450,6 +449,23 @@
       font-size: 15px
     }
 
+    svg.lucide {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+      vertical-align: middle;
+    }
+
+    button svg.lucide,
+    a.btn svg.lucide {
+      margin-right: 5px;
+    }
+
+    .header-icon svg {
+      width: 21px;
+      height: 21px;
+    }
+
     @media(max-width:600px) {
 
       .grid,
@@ -469,6 +485,18 @@
       main {
         padding: 12px 12px 24px
       }
+
+      .actions {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .actions .btn,
+      .actions button {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+      }
     }
   </style>
 </head>
@@ -479,10 +507,12 @@
       <div class="header-row">
 
         <div class="header-title">
-          <span class="header-icon">🎾</span>
+          <span class="header-icon">
+            <i data-lucide="circle-dot"></i>
+          </span>
 
           <div class="header-text">
-            <h1>Super 8 Padel</h1>
+            <h1>Inicio</h1>
             <small></small>
           </div>
         </div>
@@ -498,32 +528,53 @@
         automáticamente.</p>
     </div>
     <div class="home-grid">
-      <div class="card home-action"><span class="emoji">🎾</span>
+      <div class="card home-action">
+        <i data-lucide="plus-circle"></i>
         <h3>Nuevo torneo</h3>
-        <p class="muted">Elegir Individual o Por parejas.</p><a class="btn primary" href="modalidad.html">Crear
-          torneo</a>
+
+        <p class="muted">Elegir Individual o Por parejas.</p>
+        <a class="btn primary" href="modalidad.html">
+          Crear torneo
+        </a>
       </div>
-      <div class="card home-action"><span class="emoji">📋</span>
+
+      <div class="card home-action">
+        <i data-lucide="history"></i>
         <h3>Historial</h3>
-        <p class="muted">Consultar, continuar o eliminar torneos.</p><a class="btn secondary" href="historial.html">Ver
-          historial</a>
+        <p class="muted">Consultar los torneos finalizados.</p>
+        <a class="btn secondary" href="historial.html">
+          Ver historial
+        </a>
       </div>
     </div>
-    <div id="continueCard" class="card" style="display:none">
-      <h2>Torneo actual</h2>
-      <div id="currentInfo" class="muted"></div>
-      <div class="actions"><a class="btn accent" href="rondas.html">▶ Continuar torneo</a><a class="btn secondary"
-          href="resultados.html">Ver clasificación</a></div>
+
+    <!-- TORNEOS EN CURSO -->
+
+    <div id="activeTournamentsCard" class="card" style="display:none"></div>
+    <h2>Torneos en curso</h2>
+    <div id="activeTournaments"></div>
     </div>
   </main>
+
   <footer>
-    <div class="wrap">© 2026 Dana Grecco</div>
+    <div class="wrap">
+      <div>© 2026 Dana Grecco</div>
+
+      <div style="margin-top:6px;">
+        <a href="acerca.html" style="color:var(--redwood); text-decoration:none; font-weight:bold;">
+          <i data-lucide="mail"></i>
+          Contacto
+        </a>
+      </div>
+    </div>
   </footer>
+
+
   <script>
-    function getTournaments() {return JSON.parse(localStorage.getItem('super8_tournaments') || '[]');}
-    function setTournaments(list) {localStorage.setItem('super8_tournaments', JSON.stringify(list));}
-    function getCurrentId() {return localStorage.getItem('super8_current_id');}
-    function setCurrentId(id) {localStorage.setItem('super8_current_id', String(id));}
+    function getTournaments() { return JSON.parse(localStorage.getItem('super8_tournaments') || '[]'); }
+    function setTournaments(list) { localStorage.setItem('super8_tournaments', JSON.stringify(list)); }
+    function getCurrentId() { return localStorage.getItem('super8_current_id'); }
+    function setCurrentId(id) { localStorage.setItem('super8_current_id', String(id)); }
     function getCurrentTournament() {
       const id = getCurrentId();
       if (!id) return null;
@@ -561,10 +612,10 @@
       [[1, 2], [3, 8], [4, 7], [5, 6]]
     ];
 
-    function getFixture(data) {return data.mode === 'pairs' ? pairsFixture : individualFixture;}
-    function totalMatches(data) {return data.mode === 'pairs' ? 28 : 14;}
-    function entityCount(data) {return 8;}
-    function entityLabel(data) {return data.mode === 'pairs' ? 'Pareja' : 'Participante';}
+    function getFixture(data) { return data.mode === 'pairs' ? pairsFixture : individualFixture; }
+    function totalMatches(data) { return data.mode === 'pairs' ? 28 : 14; }
+    function entityCount(data) { return 8; }
+    function entityLabel(data) { return data.mode === 'pairs' ? 'Pareja' : 'Participante'; }
     function displayEntity(data, id) {
       if (data.mode === 'pairs') {
         const p = data.pairs[id - 1];
@@ -573,13 +624,136 @@
       return data.players[id - 1];
     }
 
-    const current = getCurrentTournament();
-    if (current) {
-      document.getElementById('continueCard').style.display = 'block';
-      const loaded = Object.values(current.results || {}).filter(x => x.valid).length;
-      document.getElementById('currentInfo').innerHTML = `<strong>${current.name}</strong><br>${current.mode === 'pairs' ? 'Por parejas' : 'Individual'} · ${formatDate(current.date)} · ${current.target} puntos · ${loaded}/${totalMatches(current)} partidos · <span class="badge ${current.status === 'Finalizado' ? 'done' : 'running'}">${current.status}</span>`;
+    function openTournament(id, page) {
+      setCurrentId(id);
+      location.href = page;
     }
+
+    function deleteTournament(id) {
+
+      const t = getTournaments()
+        .find(x => String(x.id) === String(id));
+
+      if (!t) return;
+
+      const ok = confirm(
+        `¿Querés eliminar definitivamente "${t.name}"?`
+      );
+
+      if (!ok) return;
+
+      const list = getTournaments()
+        .filter(x => String(x.id) !== String(id));
+
+      setTournaments(list);
+
+      if (String(getCurrentId()) === String(id)) {
+        localStorage.removeItem('super8_current_id');
+      }
+
+      renderActiveTournaments();
+    }
+
+    function renderActiveTournaments() {
+
+      const tournaments = getTournaments();
+
+      // Actualizar automáticamente el estado de cada torneo
+      tournaments.forEach(t => {
+        const validCount = Object.values(t.results || {})
+          .filter(x => x.valid).length;
+
+        if (validCount === totalMatches(t)) {
+          t.status = 'Finalizado';
+        } else {
+          t.status = 'En curso';
+        }
+      });
+
+      // Guardar los estados corregidos
+      setTournaments(tournaments);
+
+      // Mostrar solamente los torneos en curso
+      const active = tournaments
+        .filter(t => t.status === 'En curso');
+
+      const card = document.getElementById('activeTournamentsCard');
+      const box = document.getElementById('activeTournaments');
+
+      if (active.length === 0) {
+        card.style.display = 'block';
+        box.innerHTML = '<p class="error">No hay torneos en juego</p>';
+        return;
+      }
+
+      card.style.display = 'block';
+
+      box.innerHTML = active.map(t => {
+
+        const loaded = Object.values(t.results || {})
+          .filter(x => x.valid).length;
+
+        return `
+      <div class="history-item">
+
+        <div class="history-top">
+
+          <div>
+            <div class="history-name">${t.name}</div>
+
+            <div class="muted">
+              ${t.mode === 'pairs' ? 'Por parejas' : 'Individual'}
+              · ${formatDate(t.date)}
+              · ${t.target} puntos
+              · ${loaded}/${totalMatches(t)} partidos
+            </div>
+          </div>
+
+          <span class="badge running">
+            En curso
+          </span>
+
+        </div>
+
+        <div class="actions">
+
+          <button
+            class="accent"
+            onclick="openTournament('${t.id}', 'rondas.html')">
+            <i data-lucide="play"></i>
+            Continuar torneo
+          </button>
+
+          <button
+            class="secondary"
+            onclick="openTournament('${t.id}', 'resultados.html')">
+            <i data-lucide="chart-no-axes-column"></i>
+            Ver clasificación
+          </button>
+
+          <button
+            class="danger"
+            onclick="deleteTournament('${t.id}')">
+            <i data-lucide="trash-2"></i>
+            Eliminar
+          </button>
+
+        </div>
+      </div>
+    `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    renderActiveTournaments();
+
   </script>
+
+  <script src="assets/js/lucide.min.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+
 </body>
 
 </html>
