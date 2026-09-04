@@ -31,68 +31,50 @@
     }
 
     header {
-      background: linear-gradient(135deg, var(--caribbean), #0d7a83);
+      background: var(--caribbean);
       color: #fff;
-      padding: 18px 20px;
-      border-radius: 0 0 20px 20px;
-      box-shadow: 0 6px 18px rgba(10, 103, 114, .18);
+      padding: 16px;
     }
 
     header .wrap,
     main,
     footer .wrap {
       max-width: 820px;
-      margin: auto
+      margin: auto;
     }
 
     .header-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 12px;
     }
 
-    header small {
-      color: #e7f1ee
+    .header-title {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
     }
 
-    .header-title h1 {
+    .header-icon {
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .header-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-text h1 {
       margin: 0;
-      font-size: 22px;
-      font-weight: 700;
+      font-size: 20px;
     }
 
-    .header-title small {
-      display: block;
-      margin-top: 4px;
+    .header-text small {
+      margin-top: 2px;
       font-size: 13px;
       color: #e7f1ee;
-    }
-
-    .home-button {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-
-      text-decoration: none;
-
-      background: rgba(255, 255, 255, .16);
-      color: white;
-
-      border: 1px solid rgba(255, 255, 255, .25);
-      border-radius: 12px;
-
-      padding: 10px 14px;
-
-      font-size: 14px;
-      font-weight: bold;
-
-      transition: .2s;
-    }
-
-    .home-button:hover {
-      background: rgba(255, 255, 255, .25);
-      transform: translateY(-1px);
     }
 
     main {
@@ -113,10 +95,6 @@
       padding: 16px;
       margin-bottom: 16px;
       box-shadow: 0 5px 20px rgba(10, 103, 114, .08)
-    }
-    .card h2 {
-      font-size: 20px;
-      text-align: center;
     }
 
     .hero {
@@ -486,19 +464,6 @@
         font-size: 12px
       }
 
-      .header-title h1 {
-        font-size: 19px;
-      }
-
-      .home-button span {
-        display: none;
-      }
-
-      .home-button {
-        padding: 9px 11px;
-        font-size: 18px;
-      }
-
       main {
         padding: 12px 12px 24px
       }
@@ -508,21 +473,23 @@
 
 <body>
   <header>
-    <div class="wrap">
-      <div class="header-row">
+  <div class="wrap">
+    <div class="header-row">
 
-        <div class="header-title">
-          <h1>🎾 Super 8 Padel</h1>
+      <div class="header-title">
+        <span class="header-icon">🎾</span>
+
+        <div class="header-text">
+          <h1>Super 8 Pádel</h1>
           <small>Elegir modalidad</small>
         </div>
-
-        <a class="home-button" href="inicio.html">
-          🏠 <span>Inicio</span>
-        </a>
-
       </div>
+
+      <a class="btn ghost" href="inicio.html">🏠 Inicio</a>
+
     </div>
-  </header>
+  </div>
+</header>
   <main>
     <div class="card">
       <h2>¿Cómo se juega este Super 8?</h2>
@@ -539,10 +506,10 @@
     </div>
   </main>
   <footer>
-    <div class="wrap">© Dana Grecco</div>
+    <div class="wrap">© 2026 Dana Grecco</div>
   </footer>
   <script>
-    function choose(mode) { localStorage.setItem('super8_new_mode', mode); location.href = 'jugadoras.html'; }
+    function choose(mode) {localStorage.setItem('super8_new_mode', mode); location.href = 'jugadoras.html';}
   </script>
 </body>
 

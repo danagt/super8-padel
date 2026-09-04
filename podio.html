@@ -33,30 +33,48 @@
     header {
       background: var(--caribbean);
       color: #fff;
-      padding: 16px
+      padding: 16px;
     }
 
     header .wrap,
     main,
     footer .wrap {
       max-width: 820px;
-      margin: auto
+      margin: auto;
     }
 
     .header-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px
+      gap: 12px;
     }
 
-    header h1 {
+    .header-title {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .header-icon {
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .header-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-text h1 {
       margin: 0;
-      font-size: 20px
+      font-size: 20px;
     }
 
-    header small {
-      color: #e7f1ee
+    .header-text small {
+      margin-top: 2px;
+      font-size: 13px;
+      color: #e7f1ee;
     }
 
     main {
@@ -455,14 +473,23 @@
 
 <body>
   <header>
-    <div class="wrap">
-      <div class="header-row">
-        <div>
-          <h1>🏆 Super 8 Padel</h1><small>Podio final</small>
-        </div><a class="btn ghost" href="inicio.html">🏠 Inicio</a>
+  <div class="wrap">
+    <div class="header-row">
+
+      <div class="header-title">
+        <span class="header-icon">🏆</span>
+
+        <div class="header-text">
+          <h1>Super 8 Padel</h1>
+          <small>Podio final</small>
+        </div>
       </div>
+
+      <a class="btn ghost" href="inicio.html">🏠 Inicio</a>
+
     </div>
-  </header>
+  </div>
+</header>
   <main>
     <div class="hero">
       <h2>Podio final</h2>
@@ -475,13 +502,13 @@
     </div>
   </main>
   <footer>
-    <div class="wrap">© Dana Grecco</div>
+    <div class="wrap">© 2026 Dana Grecco</div>
   </footer>
   <script>
-    function getTournaments() { return JSON.parse(localStorage.getItem('super8_tournaments') || '[]'); }
-    function setTournaments(list) { localStorage.setItem('super8_tournaments', JSON.stringify(list)); }
-    function getCurrentId() { return localStorage.getItem('super8_current_id'); }
-    function setCurrentId(id) { localStorage.setItem('super8_current_id', String(id)); }
+    function getTournaments() {return JSON.parse(localStorage.getItem('super8_tournaments') || '[]');}
+    function setTournaments(list) {localStorage.setItem('super8_tournaments', JSON.stringify(list));}
+    function getCurrentId() {return localStorage.getItem('super8_current_id');}
+    function setCurrentId(id) {localStorage.setItem('super8_current_id', String(id));}
     function getCurrentTournament() {
       const id = getCurrentId();
       if (!id) return null;
@@ -519,10 +546,10 @@
       [[1, 2], [3, 8], [4, 7], [5, 6]]
     ];
 
-    function getFixture(data) { return data.mode === 'pairs' ? pairsFixture : individualFixture; }
-    function totalMatches(data) { return data.mode === 'pairs' ? 28 : 14; }
-    function entityCount(data) { return 8; }
-    function entityLabel(data) { return data.mode === 'pairs' ? 'Pareja' : 'Participante'; }
+    function getFixture(data) {return data.mode === 'pairs' ? pairsFixture : individualFixture;}
+    function totalMatches(data) {return data.mode === 'pairs' ? 28 : 14;}
+    function entityCount(data) {return 8;}
+    function entityLabel(data) {return data.mode === 'pairs' ? 'Pareja' : 'Participante';}
     function displayEntity(data, id) {
       if (data.mode === 'pairs') {
         const p = data.pairs[id - 1];
@@ -535,9 +562,9 @@
       const fixture = getFixture(data), results = data.results || {};
       let s = [];
       if (data.mode === 'pairs') {
-        s = data.pairs.map((p, i) => ({ id: i + 1, name: `${p.member1} / ${p.member2}`, pj: 0, pg: 0, gf: 0, gc: 0, diff: 0 }));
+        s = data.pairs.map((p, i) => ({id: i + 1, name: `${p.member1} / ${p.member2}`, pj: 0, pg: 0, gf: 0, gc: 0, diff: 0}));
       } else {
-        s = data.players.map((name, i) => ({ id: i + 1, name, pj: 0, pg: 0, gf: 0, gc: 0, diff: 0 }));
+        s = data.players.map((name, i) => ({id: i + 1, name, pj: 0, pg: 0, gf: 0, gc: 0, diff: 0}));
       }
       let h = {};
 
@@ -556,8 +583,8 @@
         } else {
           let A = [m[0], m[1]], B = [m[2], m[3]];
           [...A, ...B].forEach(p => s[p - 1].pj++);
-          A.forEach(p => { s[p - 1].gf += z.a; s[p - 1].gc += z.b });
-          B.forEach(p => { s[p - 1].gf += z.b; s[p - 1].gc += z.a });
+          A.forEach(p => {s[p - 1].gf += z.a; s[p - 1].gc += z.b});
+          B.forEach(p => {s[p - 1].gf += z.b; s[p - 1].gc += z.a});
           if (z.a > z.b) A.forEach(p => s[p - 1].pg++);
           if (z.b > z.a) B.forEach(p => s[p - 1].pg++);
           A.forEach(a => B.forEach(b => {
@@ -592,8 +619,8 @@
     const data = getCurrentTournament(); if (!data) location.href = 'inicio.html';
     const validCount = Object.values(data.results || {}).filter(x => x.valid).length, total = totalMatches(data);
     document.getElementById('subtitle').textContent = `${data.name} · ${data.mode === 'pairs' ? 'Por parejas' : 'Individual'} · ${formatDate(data.date)}`;
-    if (validCount !== total) { document.getElementById('podium').innerHTML = `<div class="card"><strong>El torneo todavía no está completo.</strong><p class="muted">Faltan ${total - validCount} partido(s) válido(s).</p><a class="btn secondary" href="rondas.html">Volver a rondas</a></div>`; }
-    else { data.status = 'Finalizado'; saveTournamentObject(data); const s = calculateStats(data), m = ['🥇', '🥈', '🥉']; document.getElementById('podium').innerHTML = s.slice(0, 3).map((x, i) => `<div class="place ${i === 0 ? 'first' : ''}"><div class="medal">${m[i]}</div><strong>${i + 1}.º ${x.name}</strong><div class="muted">${x.pg} partidos ganados · ${x.gf} juegos a favor · diferencia ${x.diff > 0 ? '+' : ''}${x.diff}</div></div>`).join(''); }
+    if (validCount !== total) {document.getElementById('podium').innerHTML = `<div class="card"><strong>El torneo todavía no está completo.</strong><p class="muted">Faltan ${total - validCount} partido(s) válido(s).</p><a class="btn secondary" href="rondas.html">Volver a rondas</a></div>`;}
+    else {data.status = 'Finalizado'; saveTournamentObject(data); const s = calculateStats(data), m = ['🥇', '🥈', '🥉']; document.getElementById('podium').innerHTML = s.slice(0, 3).map((x, i) => `<div class="place ${i === 0 ? 'first' : ''}"><div class="medal">${m[i]}</div><strong>${i + 1}.º ${x.name}</strong><div class="muted">${x.pg} partidos ganados · ${x.gf} juegos a favor · diferencia ${x.diff > 0 ? '+' : ''}${x.diff}</div></div>`).join('');}
   </script>
 </body>
 

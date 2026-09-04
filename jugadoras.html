@@ -33,30 +33,48 @@
     header {
       background: var(--caribbean);
       color: #fff;
-      padding: 16px
+      padding: 16px;
     }
 
     header .wrap,
     main,
     footer .wrap {
       max-width: 820px;
-      margin: auto
+      margin: auto;
     }
 
     .header-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px
+      gap: 12px;
     }
 
-    header h1 {
+    .header-title {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .header-icon {
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .header-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-text h1 {
       margin: 0;
-      font-size: 20px
+      font-size: 20px;
     }
 
-    header small {
-      color: #e7f1ee
+    .header-text small {
+      margin-top: 2px;
+      font-size: 13px;
+      color: #e7f1ee;
     }
 
     main {
@@ -455,14 +473,23 @@
 
 <body>
   <header>
-    <div class="wrap">
-      <div class="header-row">
-        <div>
-          <h1>🎾 Super 8 Padel</h1><small id="subtitle">Nuevo torneo</small>
-        </div><a class="btn ghost" href="inicio.html">🏠 Inicio</a>
+  <div class="wrap">
+    <div class="header-row">
+
+      <div class="header-title">
+        <span class="header-icon">🎾</span>
+
+        <div class="header-text">
+          <h1>Super 8 Padel</h1>
+          <small id="subtitle">Nuevo torneo</small>
+        </div>
       </div>
+
+      <a class="btn ghost" href="inicio.html">🏠 Inicio</a>
+
     </div>
-  </header>
+  </div>
+</header>
   <main>
     <div class="card">
       <h2>Datos del torneo</h2>
@@ -472,8 +499,7 @@
         <div><label>Puntos para ganar cada partido</label><input id="target" type="number" min="1" step="1" value="4">
         </div>
       </div>
-      <div class="note" style="margin-top:12px">El resultado debe llegar exactamente al puntaje objetivo. Ej.: si se
-        juega a 4, son válidos 4-0, 4-1, 4-2 o 4-3.</div>
+      <div class="note" style="margin-top:12px">El resultado debe llegar exactamente al puntaje objetivo. Ej.: si se juega a 4, son válidos 4-0, 4-1, 4-2 o 4-3.</div>
     </div>
     <div class="card">
       <h2 id="entryTitle"></h2>
@@ -483,13 +509,13 @@
     </div>
   </main>
   <footer>
-    <div class="wrap">© Dana Grecco</div>
+    <div class="wrap">© 2026 Dana Grecco</div>
   </footer>
   <script>
-    function getTournaments() { return JSON.parse(localStorage.getItem('super8_tournaments') || '[]'); }
-    function setTournaments(list) { localStorage.setItem('super8_tournaments', JSON.stringify(list)); }
-    function getCurrentId() { return localStorage.getItem('super8_current_id'); }
-    function setCurrentId(id) { localStorage.setItem('super8_current_id', String(id)); }
+    function getTournaments() {return JSON.parse(localStorage.getItem('super8_tournaments') || '[]');}
+    function setTournaments(list) {localStorage.setItem('super8_tournaments', JSON.stringify(list));}
+    function getCurrentId() {return localStorage.getItem('super8_current_id');}
+    function setCurrentId(id) {localStorage.setItem('super8_current_id', String(id));}
     function getCurrentTournament() {
       const id = getCurrentId();
       if (!id) return null;
@@ -508,8 +534,14 @@
     }
 
     const mode = localStorage.getItem('super8_new_mode') || 'individual';
-    document.getElementById('tdate').value = new Date().toISOString().slice(0, 10);
-    document.getElementById('subtitle').textContent = mode === 'pairs' ? 'Nuevo torneo · Por parejas' : 'Nuevo torneo · Individual';
+
+    document.getElementById('tdate').value = 
+      new Date().toISOString().slice(0, 10);
+
+    document.getElementById('subtitle').textContent = 
+      mode === 'pairs' 
+        ? 'Nuevo torneo · Por parejas' 
+        : 'Nuevo torneo · Individual';
 
     function renderEntries() {
       const box = document.getElementById('entries');
@@ -529,7 +561,7 @@
       document.getElementById('tname').value = 'Super 8 de prueba';
       if (mode === 'pairs') {
         const a = ['Ana', 'Carla', 'Eva', 'Gabi', 'Iris', 'Lara', 'Marta', 'Nora'], b = ['Juan', 'Luis', 'Pablo', 'Tomi', 'Santi', 'Diego', 'Marco', 'Leo'];
-        for (let i = 1; i <= 8; i++) { document.getElementById(`p${i}a`).value = a[i - 1]; document.getElementById(`p${i}b`).value = b[i - 1]; }
+        for (let i = 1; i <= 8; i++) {document.getElementById(`p${i}a`).value = a[i - 1]; document.getElementById(`p${i}b`).value = b[i - 1];}
       } else {
         ['Ana', 'Bea', 'Carla', 'Dani', 'Eva', 'Flor', 'Gabi', 'Luz'].forEach((n, i) => document.getElementById('p' + (i + 1)).value = n);
       }
@@ -538,23 +570,23 @@
       const name = document.getElementById('tname').value.trim() || 'Super 8 Pádel';
       const date = document.getElementById('tdate').value;
       const target = Number(document.getElementById('target').value);
-      if (!Number.isInteger(target) || target <= 0) { alert('Ingresá una cantidad de puntos válida.'); return; }
+      if (!Number.isInteger(target) || target <= 0) {alert('Ingresá una cantidad de puntos válida.'); return;}
 
-      let t = { id: Date.now(), name, date, target, mode, results: {}, status: 'En curso', createdAt: new Date().toISOString() };
+      let t = {id: Date.now(), name, date, target, mode, results: {}, status: 'En curso', createdAt: new Date().toISOString()};
 
       if (mode === 'pairs') {
         const pairs = [], names = [];
         for (let i = 1; i <= 8; i++) {
           const a = document.getElementById(`p${i}a`).value.trim(), b = document.getElementById(`p${i}b`).value.trim();
-          if (!a || !b) { alert(`Completá los dos integrantes de la Pareja ${i}.`); return; }
-          pairs.push({ member1: a, member2: b }); names.push(a.toLowerCase(), b.toLowerCase());
+          if (!a || !b) {alert(`Completá los dos integrantes de la Pareja ${i}.`); return;}
+          pairs.push({member1: a, member2: b}); names.push(a.toLowerCase(), b.toLowerCase());
         }
-        if (new Set(names).size !== 16) { alert('No puede haber nombres repetidos entre los integrantes de las parejas.'); return; }
+        if (new Set(names).size !== 16) {alert('No puede haber nombres repetidos entre los integrantes de las parejas.'); return;}
         t.pairs = pairs;
       } else {
         const players = [];
-        for (let i = 1; i <= 8; i++) { const v = document.getElementById('p' + i).value.trim(); if (!v) { alert(`Falta completar el Participante ${i}.`); return; } players.push(v); }
-        if (new Set(players.map(x => x.toLowerCase())).size !== 8) { alert('No puede haber nombres repetidos.'); return; }
+        for (let i = 1; i <= 8; i++) {const v = document.getElementById('p' + i).value.trim(); if (!v) {alert(`Falta completar el Participante ${i}.`); return;} players.push(v);}
+        if (new Set(players.map(x => x.toLowerCase())).size !== 8) {alert('No puede haber nombres repetidos.'); return;}
         t.players = players;
       }
       saveTournamentObject(t); setCurrentId(t.id); localStorage.setItem('super8_round', '0'); location.href = 'rondas.html';
