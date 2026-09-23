@@ -12,6 +12,11 @@
       --ecru: #dcc27f;
       --sienna: #df8869;
       --redwood: #a44a47;
+
+      --desafio:#cc5a30;
+      --desafio-dark:#b9684f;
+      --desafio-soft:#f8e5dd;
+
       --bg: #f7f4ee;
       --card: #fffdf9;
       --text: #2f3a3c;
@@ -31,7 +36,7 @@
     }
 
     header {
-      background: var(--caribbean);
+      background: #b86b62;
       color: #fff;
       padding: 16px;
     }
@@ -69,6 +74,7 @@
     .header-text h1 {
       margin: 0;
       font-size: 20px;
+      color: #fff;
     }
 
     .header-text small {
@@ -90,6 +96,32 @@
       text-align: center;
       font-size: 12px;
       color: var(--redwood)
+    }
+
+    .history-name.super8 {
+      color: var(--caribbean);
+    }
+
+    .history-name.desafios {
+      color: var(--desafio);
+    }
+
+    .history-item.super8-item {
+      background: #e4f1ed;
+      border-color: rgba(10, 103, 114, .28);
+      box-shadow: 0 5px 18px rgba(10, 103, 114, .06);
+    }
+
+    .history-item.desafios-item {
+      background: #fde7de;
+      border-color: rgba(204, 90, 48, .35);
+      box-shadow: 0 5px 18px rgba(204, 90, 48, .08);
+    }
+
+    .history-top .muted {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 2px;
     }
 
     .card {
@@ -218,8 +250,8 @@
 
     .ghost {
       background: transparent;
-      color: white;
-      border: 1px solid rgba(255, 255, 255, .3)
+      color: #fff;;
+      border: 1px solid rgba(122, 90, 19, .35)
     }
 
     .actions {
@@ -256,6 +288,18 @@
       background: #f5e2e1;
       color: var(--redwood);
       border: 1px solid rgba(164, 74, 71, .18);
+    }
+
+    .badge.super8-badge {
+      background: #e8f3ef;
+      color: var(--caribbean);
+      border: 1px solid rgba(10, 103, 114, .18);
+    }
+
+    .badge.desafio-badge {
+      background: var(--desafio-soft);
+      color: var(--desafio);
+      border: 1px solid rgba(204, 90, 48, .22);
     }
 
     .match {
@@ -518,37 +562,70 @@
         text-align: center;
       }
     }
+  
+
+    /* ===== Ajuste tipográfico móvil general ===== */
+    @media(max-width:600px) {
+      header {
+        padding: 12px 14px;
+      }
+
+      .header-text h1 {
+        font-size: 17px;
+      }
+
+      main {
+        padding: 12px 12px 22px;
+      }
+
+      .card {
+        padding: 12px;
+        margin-bottom: 12px;
+        border-radius: 16px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 15px;
+      }
+
+      .hero {
+        padding: 18px 16px;
+        border-radius: 18px;
+      }
+
+      .hero h2 {
+        font-size: 22px;
+      }
+    }
+
   </style>
 </head>
 
 <body>
-  <header>
+  <header class="historial-header">
     <div class="wrap">
       <div class="header-row">
-
         <div class="header-title">
-          <span class="header-icon">
-            <i data-lucide="history"></i>
-          </span>
-
-          <div class="header-text">
-            <h1>Super 8 Padel</h1>
-            <small>Historial de torneos</small>
+          <div class="header-text historial-header-text">
+            <h1>Historial</h1>
           </div>
         </div>
 
-        <a class="btn ghost" href="inicio.html">
+        <a class="btn ghost historial-ghost" href="inicio.html">
           <i data-lucide="house"></i>
           Inicio
         </a>
-
       </div>
     </div>
   </header>
 
   <main>
     <div class="card">
-      <h2>Torneos finalizados</h2>
+      <h2>Partidos finalizados</h2>
       <div id="list"></div>
     </div>
   </main>
@@ -557,154 +634,518 @@
     <div class="wrap">© 2026 Dana Grecco</div>
   </footer>
 
-  <script>
-    function getTournaments() { return JSON.parse(localStorage.getItem('super8_tournaments') || '[]'); }
-    function setTournaments(list) { localStorage.setItem('super8_tournaments', JSON.stringify(list)); }
-    function getCurrentId() { return localStorage.getItem('super8_current_id'); }
-    function setCurrentId(id) { localStorage.setItem('super8_current_id', String(id)); }
-    function getCurrentTournament() {
-      const id = getCurrentId();
-      if (!id) return null;
-      return getTournaments().find(t => String(t.id) === String(id)) || null;
+  <script src="assets/js/lucide.min.js"></script>
+
+<script>
+
+  function safeReadList(key) {
+    try {
+      const raw = localStorage.getItem(key);
+
+      if (!raw) return [];
+
+      const parsed = JSON.parse(raw);
+
+      return Array.isArray(parsed)
+        ? parsed
+        : [];
+
+    } catch (error) {
+
+      console.error(`No se pudo leer ${key}:`, error);
+
+      return [];
     }
-    function saveTournamentObject(t) {
-      const list = getTournaments();
-      const idx = list.findIndex(x => String(x.id) === String(t.id));
-      if (idx >= 0) list[idx] = t; else list.unshift(t);
-      setTournaments(list);
+  }
+
+
+  function safeWriteList(key, list) {
+
+    try {
+
+      localStorage.setItem(
+        key,
+        JSON.stringify(list)
+      );
+
+      return true;
+
+    } catch (error) {
+
+      console.error(
+        `No se pudo guardar ${key}:`,
+        error
+      );
+
+      alert(
+        'No se pudo guardar la información.'
+      );
+
+      return false;
     }
-    function formatDate(v) {
-      if (!v) return '';
-      const p = v.split('-');
-      return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : v;
+  }
+
+
+  /* =========================
+     SUPER 8
+     ========================= */
+
+  function getTournaments() {
+
+    return safeReadList(
+      'super8_tournaments'
+    );
+  }
+
+
+  function setTournaments(list) {
+
+    safeWriteList(
+      'super8_tournaments',
+      list
+    );
+  }
+
+
+  function getCurrentId() {
+
+    return localStorage.getItem(
+      'super8_current_id'
+    );
+  }
+
+
+  function setCurrentId(id) {
+
+    localStorage.setItem(
+      'super8_current_id',
+      String(id)
+    );
+  }
+
+
+  function totalMatches(data) {
+
+    return data.mode === 'pairs'
+      ? 28
+      : 14;
+  }
+
+
+  /* =========================
+     DESAFÍOS X 3
+     ========================= */
+
+  function getChallenges() {
+
+    return safeReadList(
+      'desafiosx3_history'
+    );
+  }
+
+
+  function setChallenges(list) {
+
+    safeWriteList(
+      'desafiosx3_history',
+      list
+    );
+  }
+
+
+  /* =========================
+     UTILIDADES
+     ========================= */
+
+  function formatDate(v) {
+
+    if (!v) return '';
+
+    const p = v.split('-');
+
+    return p.length === 3
+      ? `${p[2]}/${p[1]}/${p[0]}`
+      : v;
+  }
+
+
+  function escapeHtml(value) {
+
+    return String(value ?? '')
+
+      .replaceAll('&', '&amp;')
+
+      .replaceAll('<', '&lt;')
+
+      .replaceAll('>', '&gt;')
+
+      .replaceAll('"', '&quot;')
+
+      .replaceAll("'", '&#039;');
+  }
+
+
+  /* =========================
+     UNIFICAR HISTORIALES
+     ========================= */
+
+  function getUnifiedHistory() {
+
+    const super8 = getTournaments()
+
+      .filter(
+        t => t.status === 'Finalizado'
+      )
+
+      .map(t => ({
+        ...t,
+        gameType: 'super8'
+      }));
+
+
+    const desafios = getChallenges()
+
+      .filter(
+        d => d.status === 'Finalizado'
+      )
+
+      .map(d => ({
+        ...d,
+        gameType: 'desafiosx3'
+      }));
+
+
+    return [
+      ...super8,
+      ...desafios
+    ]
+
+      .sort((a, b) => {
+
+        const dateA =
+          a.finishedAt ||
+          a.date ||
+          a.createdAt ||
+          '';
+
+        const dateB =
+          b.finishedAt ||
+          b.date ||
+          b.createdAt ||
+          '';
+
+        return String(dateB)
+          .localeCompare(
+            String(dateA)
+          );
+      });
+  }
+
+
+  /* =========================
+     MOSTRAR HISTORIAL
+     ========================= */
+
+  function render() {
+
+    const list =
+      getUnifiedHistory();
+
+    const el =
+      document.getElementById(
+        'list'
+      );
+
+
+    if (!list.length) {
+
+      el.innerHTML = `
+        <p
+          class="muted"
+          style="text-align:center"
+        >
+          Todavía no hay juegos finalizados.
+        </p>
+      `;
+
+      return;
     }
 
-    const individualFixture = [
-      [[1, 2, 3, 4], [5, 6, 7, 8]],
-      [[1, 3, 5, 7], [2, 4, 6, 8]],
-      [[2, 3, 6, 7], [1, 4, 5, 8]],
-      [[1, 5, 2, 6], [3, 7, 4, 8]],
-      [[2, 5, 4, 7], [1, 6, 3, 8]],
-      [[2, 8, 3, 5], [1, 7, 4, 6]],
-      [[3, 6, 4, 5], [1, 8, 2, 7]]
-    ];
 
-    const pairsFixture = [
-      [[1, 8], [2, 7], [3, 6], [4, 5]],
-      [[1, 7], [8, 6], [2, 5], [3, 4]],
-      [[1, 6], [7, 5], [8, 4], [2, 3]],
-      [[1, 5], [6, 4], [7, 3], [8, 2]],
-      [[1, 4], [5, 3], [6, 2], [7, 8]],
-      [[1, 3], [4, 2], [5, 8], [6, 7]],
-      [[1, 2], [3, 8], [4, 7], [5, 6]]
-    ];
+    el.innerHTML =
+      list.map(item => {
 
-    function getFixture(data) { return data.mode === 'pairs' ? pairsFixture : individualFixture; }
-    function totalMatches(data) { return data.mode === 'pairs' ? 28 : 14; }
-    function entityCount(data) { return 8; }
-    function entityLabel(data) { return data.mode === 'pairs' ? 'Pareja' : 'Participante'; }
-    function displayEntity(data, id) {
-      if (data.mode === 'pairs') {
-        const p = data.pairs[id - 1];
-        return `${p.member1} / ${p.member2}`;
-      }
-      return data.players[id - 1];
-    }
 
-    function render() {
-      const list = getTournaments()
-        .filter(t => t.status === 'Finalizado');
+        /* =====================
+           SUPER 8
+           ===================== */
 
-      const el = document.getElementById('list');
+        if (
+          item.gameType ===
+          'super8'
+        ) {
+          const valid =
+            Object.values(
+              item.results || {}
+            )
+            .filter(
+              x => x.valid
+            ).length;
 
-      if (!list.length) {
-        el.innerHTML = '<p class="muted">Todavía no hay torneos finalizados.</p>';
-        return;
-      }
+          const total =
+            totalMatches(item);
 
-      el.innerHTML = list.map(t => {
-        const valid = Object.values(t.results || {})
-          .filter(x => x.valid).length;
+          return `
+            <div class="history-item super8-item">
+              <div class="history-top">
+                <div
+                  class="history-title-row"
+                >
+                  <div
+                    class="history-name super8"
+                  >
+                    ${escapeHtml(item.name)}
+                  </div>
 
-        const total = totalMatches(t);
-
-        return `
-          <div class="history-item">
-
-            <div class="history-top">
-
-              <div class="history-title-row">
-                <div class="history-name">
-                  ${t.name}
+                  <span
+                    class="badge super8-badge"
+                  >
+                    Super 8 . ${item.mode === 'pairs' ? 'Por Parejas' : 'Individual'}
+                  </span>
                 </div>
 
-                <span class="badge done">
-                  Finalizado
+                <div class="muted">
+                  ${formatDate(item.date)}
+                </div>
+              </div>
+
+              <div class="actions">
+                <button
+                  class="secondary"
+                  type="button"
+                  onclick="
+                    openHistoryItem(
+                      'super8',
+                      '${item.id}'
+                    )
+                  "
+                >
+                  <i
+                    data-lucide=""
+                  ></i>
+                  Abrir
+                </button>
+
+                <button
+                  class="danger"
+                  type="button"
+                  onclick="
+                    deleteHistoryItem(
+                      'super8',
+                      '${item.id}'
+                    )
+                  "
+                >
+                  <i
+                    data-lucide=""
+                  ></i>
+                  Eliminar
+                </button>
+              </div>
+            </div>
+         `;
+        }
+
+        /* =====================
+           DESAFÍOS X 3
+           ===================== */
+
+        return `
+          <div class="history-item desafios-item">
+            <div class="history-top">
+              <div
+                class="history-title-row"
+              >
+                <div
+                  class="history-name desafios"
+                >
+                  ${escapeHtml(item.name)}
+                </div>
+
+                <span
+                  class="badge desafio-badge"
+                >
+                  Desafíos x 3
                 </span>
               </div>
 
               <div class="muted">
-                ${t.mode === 'pairs' ? 'Por parejas' : 'Individual'}
-                · ${formatDate(t.date)}
-                · ${t.target} puntos
-                · ${valid}/${total} partidos
+                ${formatDate(item.date)}
               </div>
-
             </div>
 
             <div class="actions">
-
               <button
                 class="secondary"
-                onclick="openTournament('${t.id}')">
-                <i data-lucide="folder-open"></i>
+                type="button"
+                onclick="
+                  openHistoryItem(
+                    'desafiosx3',
+                    '${item.id}'
+                  )
+                "
+              >
+                <i
+                  data-lucide=""
+                ></i>
                 Abrir
               </button>
 
               <button
                 class="danger"
-                onclick="deleteTournament('${t.id}')">
-                <i data-lucide="trash-2"></i>
+                type="button"
+                onclick="
+                  deleteHistoryItem(
+                    'desafiosx3',
+                    '${item.id}'
+                  )
+                "
+              >
+                <i
+                  data-lucide=""
+                ></i>
                 Eliminar
               </button>
-
             </div>
-
           </div>
         `;
       }).join('');
 
-      lucide.createIcons();
+    lucide.createIcons();
+  }
 
-    }
+  /* =========================
+     ABRIR
+     ========================= */
 
-    function openTournament(id) {
+  function openHistoryItem(
+    type,
+    id
+  ) {
+    if (
+      type === 'super8'
+    ) {
       setCurrentId(id);
       location.href = 'detalle.html';
+      return;
     }
 
-    function deleteTournament(id) {
-      const t = getTournaments().find(x => String(x.id) === String(id));
-      if (!t) return;
+    localStorage.setItem(
+      'desafiosx3_result_id',
+      String(id)
+    );
 
-      if (!confirm(`¿Querés eliminar definitivamente "${t.name}"?`)) return;
+    location.href =
+      'desafios/detalle.html';
+  }
 
-      const list = getTournaments().filter(x => String(x.id) !== String(id));
+  /* =========================
+     ELIMINAR
+     ========================= */
+
+  function deleteHistoryItem(
+    type,
+    id
+  ) {
+    if (
+      type === 'super8'
+    ) {
+      const tournament =
+        getTournaments()
+        .find(
+          x =>
+            String(x.id) ===
+            String(id)
+        );
+
+      if (!tournament)
+        return;
+      if (
+        !confirm(
+          `¿Querés eliminar definitivamente "${tournament.name}"?`
+        )
+      )
+        return;
+
+      const list =
+        getTournaments()
+        .filter(
+          x =>
+            String(x.id) !==
+            String(id)
+        );
 
       setTournaments(list);
+      if (
+        String(
+          getCurrentId()
+        ) ===
+        String(id)
+      ) {
+        localStorage.removeItem(
+          'super8_current_id'
+        );
+      }
 
-      if (String(getCurrentId()) === String(id)) localStorage.removeItem('super8_current_id');
       render();
+      return;
     }
+
+    const challenge =
+      getChallenges()
+      .find(
+        x =>
+          String(x.id) ===
+          String(id)
+      );
+
+    if (!challenge)
+      return;
+    if (
+      !confirm(
+        `¿Querés eliminar definitivamente "${challenge.name}"?`
+      )
+    )
+      return;
+    const list =
+      getChallenges()
+      .filter(
+        x =>
+          String(x.id) !==
+          String(id)
+      );
+
+    setChallenges(list);
+    if (
+      String(
+        localStorage.getItem(
+          'desafiosx3_result_id'
+        )
+      ) ===
+      String(id)
+    ) {
+      localStorage.removeItem(
+        'desafiosx3_result_id'
+      );
+    }
+
     render();
+  }
 
-  </script>
+  render();
 
-  <script src="assets/js/lucide.min.js"></script>
-  <script>
-    lucide.createIcons();
-  </script>
+  lucide.createIcons();
 
+</script>
 </body>
-
 </html>

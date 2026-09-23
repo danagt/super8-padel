@@ -13,6 +13,11 @@
       --ecru: #dcc27f;
       --sienna: #df8869;
       --redwood: #a44a47;
+
+      --desafio:#cc5a30;
+      --desafio-dark:#b9684f;
+      --desafio-soft:#f8e5dd;
+
       --bg: #f7f4ee;
       --card: #fffdf9;
       --text: #2f3a3c;
@@ -204,7 +209,7 @@
     }
 
     .accent {
-      background: var(--sienna);
+      background: var(--desafio);
       color: white
     }
 
@@ -362,26 +367,27 @@
 
     .podium {
       display: grid;
-      gap: 12px
+      gap: 6px
     }
 
     .place {
       background: var(--card);
       border: 1px solid var(--cambridge);
-      border-radius: 18px;
-      padding: 18px;
+      border-radius: 14px;
+      padding: 7px 10px;
       text-align: center;
       box-shadow: 0 5px 20px rgba(10, 103, 114, .07)
     }
 
     .place.first {
-      padding: 24px;
+      padding: 8px 10px;
       background: linear-gradient(180deg, #fff9e8, #fffdf9);
       border-color: var(--ecru)
     }
 
     .medal {
-      font-size: 40px
+      font-size: 24px;
+      line-height: 1;
     }
 
     .podium-position {
@@ -391,9 +397,14 @@
 
     .place strong {
       display: block;
-      font-size: 20px;
-      margin: 5px 0;
+      font-size: 17px;
+      margin: 2px 0;
       color: var(--caribbean)
+    }
+
+    .place .muted {
+      font-size: 11px;
+      line-height: 1.2;
     }
 
     .history-item {
@@ -456,15 +467,15 @@
     }
 
     .full-ranking {
-      margin-top: 16px;
+      margin-top: 10px;
     }
 
     .ranking-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
+      gap: 8px;
+      padding: 8px 10px;
       border-bottom: 1px solid #dde7e2;
     }
 
@@ -475,17 +486,19 @@
     .ranking-position {
       font-weight: bold;
       color: var(--redwood);
-      min-width: 35px;
+      min-width: 30px;
+      font-size: 14px;
     }
 
     .ranking-name {
       flex: 1;
       font-weight: bold;
       color: var(--caribbean);
+      font-size: 14px;
     }
 
     .ranking-data {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--muted);
     }
 
@@ -544,6 +557,46 @@
         text-align: center;
       }
     }
+  
+
+    /* ===== Ajuste tipográfico móvil general ===== */
+    @media(max-width:600px) {
+      header {
+        padding: 12px 14px;
+      }
+
+      .header-text h1 {
+        font-size: 17px;
+      }
+
+      main {
+        padding: 12px 12px 22px;
+      }
+
+      .card {
+        padding: 12px;
+        margin-bottom: 12px;
+        border-radius: 16px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 15px;
+      }
+
+      .hero {
+        padding: 18px 16px;
+        border-radius: 18px;
+      }
+
+      .hero h2 {
+        font-size: 22px;
+      }
+    }
+
   </style>
 </head>
 
@@ -554,12 +607,12 @@
 
         <div class="header-title">
           <span class="header-icon">
-            <i data-lucide="trophy"></i>
+            <i data-lucide=""></i>
           </span>
 
           <div class="header-text">
-            <h1>Super 8 Padel</h1>
-            <small>Podio final</small>
+            <h1>Super 8 </h1>
+
           </div>
         </div>
 
@@ -582,20 +635,20 @@
     <div class="card">
       <div class="actions">
 
-        <a class="btn secondary" href="resultados.html">
-          <i data-lucide="chart-no-axes-column"></i>
-          Ver clasificación
-        </a>
+        <button class="accent" onclick="shareWhatsApp()">
+          <i data-lucide=""></i>
+          Compartir por WhatsApp
+        </button>
 
         <a class="btn primary" href="historial.html">
-          <i data-lucide="history"></i>
+          <i data-lucide=""></i>
           Historial
         </a>
 
-        <button class="accent" onclick="shareWhatsApp()">
-          <i data-lucide="share-2"></i>
-          Compartir por WhatsApp
-        </button>
+        <a class="btn secondary" href="inicio.html">
+          <i data-lucide=""></i>
+          Inicio
+        </a>
 
       </div>
     </div>
@@ -731,7 +784,7 @@
     const total = totalMatches(data);
 
     document.getElementById('subtitle').textContent =
-      `${data.name} · ${data.mode === 'pairs' ? 'Por parejas' : 'Individual'} · ${formatDate(data.date)}`;
+      `${data.mode === 'pairs' ? 'Por parejas' : 'Individual'} · ${formatDate(data.date)}`;
 
     let finalRanking = [];
 
@@ -740,7 +793,7 @@
 
       document.getElementById('podium').innerHTML = `
         <div class="card">
-          <strong>El torneo todavía no está completo.</strong>
+          <strong>El juego todavía no está completo.</strong>
 
           <p class="muted">
             Faltan ${total - validCount} partido(s) válido(s).
@@ -780,8 +833,8 @@
             </strong>
 
             <div class="muted">
-              ${x.pg} partidos ganados ·
-              ${x.gf} juegos a favor ·
+              ${x.pg} ganados ·
+              ${x.gf} a favor ·
               diferencia ${x.diff > 0 ? '+' : ''}${x.diff}
             </div>
 
@@ -796,7 +849,7 @@
 
         <div class="card full-ranking">
 
-          <h2>Clasificación completa</h2>
+          <h2>Clasificación</h2>
 
           <p class="muted" style="margin-top:-6px; margin-bottom:14px; font-size:10px">
             <strong>PG:</strong> Partidos Ganados ·
@@ -833,30 +886,18 @@
     function shareWhatsApp() {
 
       if (!finalRanking.length) {
-        alert('El torneo todavía no está finalizado.');
+        alert('El encuentro todavía no está finalizado.');
         return;
       }
 
-      let message = `Super 8 Padel\n`;
-      message += `${data.name}\n\n`;
+      let message = `${data.name}\n`;
+      message += `Fecha: ${formatDate(data.date)}\n\n`;
 
       message += `Clasificación final:\n\n`;
 
       finalRanking.forEach((p, i) => {
-
-        if (i === 0) {
-          message += `1° ${p.name}\n`;
-        } else if (i === 1) {
-          message += `2° ${p.name}\n`;
-        } else if (i === 2) {
-          message += `3° ${p.name}\n`;
-        } else {
-          message += `${i + 1}° ${p.name}\n`;
-        }
-
+        message += `${i + 1}° ${p.name}\n`;
       });
-
-      message += `\nSuper 8 Padel`;
 
       const url =
         'https://wa.me/?text=' +

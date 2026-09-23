@@ -151,12 +151,6 @@
       box-shadow: 0 0 0 3px rgba(10, 103, 114, .10)
     }
 
-    .mode-card .emoji {
-      font-size: 36px;
-      display: block;
-      margin-bottom: 8px
-    }
-
     label {
       display: block;
       font-size: 12px;
@@ -449,6 +443,30 @@
       font-size: 15px
     }
 
+    svg.lucide {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+      vertical-align: middle;
+    }
+
+    button svg.lucide,
+    a.btn svg.lucide {
+      margin-right: 5px;
+    }
+
+    .header-icon svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .mode-card svg.lucide {
+      width: 36px;
+      height: 36px;
+      margin-bottom: 8px;
+      color: var(--caribbean);
+    }
+
     @media(max-width:600px) {
 
       .grid,
@@ -481,6 +499,46 @@
         text-align: center;
       }
     }
+  
+
+    /* ===== Ajuste tipográfico móvil general ===== */
+    @media(max-width:600px) {
+      header {
+        padding: 12px 14px;
+      }
+
+      .header-text h1 {
+        font-size: 17px;
+      }
+
+      main {
+        padding: 12px 12px 22px;
+      }
+
+      .card {
+        padding: 12px;
+        margin-bottom: 12px;
+        border-radius: 16px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 15px;
+      }
+
+      .hero {
+        padding: 18px 16px;
+        border-radius: 18px;
+      }
+
+      .hero h2 {
+        font-size: 22px;
+      }
+    }
+
   </style>
 </head>
 
@@ -490,15 +548,21 @@
     <div class="header-row">
 
       <div class="header-title">
-        <span class="header-icon">🎾</span>
+
+        <span class="header-icon">
+          <i data-lucide=""></i>
+        </span>
 
         <div class="header-text">
           <h1>Super 8 Padel</h1>
-          <small>Elegir modalidad</small>
+
         </div>
       </div>
 
-      <a class="btn ghost" href="inicio.html">🏠 Inicio</a>
+      <a class="btn ghost" href="inicio.html">
+        <i data-lucide="house"></i>
+        Inicio
+      </a>
 
     </div>
   </div>
@@ -507,14 +571,19 @@
     <div class="card">
       <h2>Seleccionar</h2>
       <div class="mode-grid">
-        <div class="mode-card" onclick="choose('individual')"><span class="emoji">👤</span>
+
+        <div class="mode-card" onclick="choose('individual')">
+          <i data-lucide="user"></i>
           <h3>Individual</h3>
           <p class="muted">8 participantes · 7 rondas · 14 partidos</p>
         </div>
-        <div class="mode-card" onclick="choose('pairs')"><span class="emoji">👥</span>
+
+        <div class="mode-card" onclick="choose('pairs')">
+          <i data-lucide="users"></i>
           <h3>Por parejas</h3>
           <p class="muted">8 parejas · 7 rondas · 28 partidos</p>
         </div>
+
       </div>
     </div>
   </main>

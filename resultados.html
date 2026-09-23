@@ -349,15 +349,16 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 620px
+      min-width: 340px;
+      table-layout: fixed;
     }
 
     th,
     td {
-      padding: 10px 7px;
+      padding: 4px 7px;
       border-bottom: 1px solid #dde7e2;
       text-align: center;
-      font-size: 13px
+      font-size: 12px
     }
 
     th {
@@ -482,6 +483,18 @@
       height: 21px;
     }
 
+
+    .alerta-faltantes {
+      background: #fdeaea;
+      border: 1px solid #e2b1b1;
+      border-left: 6px solid var(--redwood);
+      color: #8a2f2c;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-top: 14px;
+    }
+
     @media(max-width:600px) {
 
       .grid,
@@ -514,6 +527,82 @@
         text-align: center;
       }
     }
+  
+
+    /* ===== Ajuste tipográfico móvil general ===== */
+    @media(max-width:600px) {
+      header {
+        padding: 12px 14px;
+      }
+
+      .header-text h1 {
+        font-size: 17px;
+      }
+
+      main {
+        padding: 12px 12px 22px;
+      }
+
+      .card {
+        padding: 10px;
+        margin-bottom: 12px;
+        border-radius: 16px;
+      }
+
+      .tablewrap {
+        border-radius: 12px;
+      }
+
+      table {
+        min-width: 0;
+        width: 100%;
+      }
+
+      th,
+      td {
+        padding: 6px 4px;
+        font-size: 12px;
+        line-height: 1.15;
+      }
+
+      th {
+        font-size: 12px;
+      }
+
+      th:first-child,
+      td:first-child {
+        width: 24%;
+      }
+
+      .card h2 {
+        margin-bottom: 10px;
+        font-size: 17px;
+      }
+
+      .card .muted {
+        font-size: 11px;
+        line-height: 1.35;
+        margin: 10px 0 2px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 15px;
+      }
+
+      .hero {
+        padding: 18px 16px;
+        border-radius: 18px;
+      }
+
+      .hero h2 {
+        font-size: 22px;
+      }
+    }
+
   </style>
 </head>
 
@@ -524,12 +613,12 @@
 
         <div class="header-title">
           <span class="header-icon">
-            <i data-lucide="chart-no-axes-column"></i>
+            <i data-lucide=""></i>
           </span>
 
           <div class="header-text">
-            <h1>Super 8 Padel</h1>
-            <small>Resultados</small>
+            <h1>Super 8 - Resultados</h1>
+
           </div>
         </div>
 
@@ -561,26 +650,26 @@
           <thead>
             <tr>
               <th id="entityHeader"></th>
-              <th>Jugados</th>
-              <th>Ganados</th>
-              <th>Juegos a favor</th>
-              <th>Juegos en contra</th>
-              <th>Diferencia</th>
+              <th>PJ</th>
+              <th>PG</th>
+              <th>A favor</th>
+              <th>En contra</th>
+              <th>Dif.</th>
             </tr>
           </thead>
           <tbody id="ranking"></tbody>
         </table>
       </div>
-      <p class="muted">Desempate: ganados → diferencia → empate → juegos a favor → menos juegos en contra.</p>
+      <p class="muted"><strong>Desempate:</strong> ganados → diferencia → empate → juegos a favor → menos juegos en contra.</p>
     </div>
 
     <div class="card">
       <div class="actions"><a class="btn secondary" href="rondas.html">
-          <i data-lucide="pencil"></i>
+          <i data-lucide=""></i>
           Corregir resultados
         </a>
         <a id="podiumBtn" class="btn primary" href="podio.html">
-          <i data-lucide="trophy"></i>
+          <i data-lucide=""></i>
           Ver podio final
         </a>
       </div>
@@ -712,7 +801,7 @@
 
     document.getElementById('tname').textContent = data.name;
 
-    document.getElementById('entityHeader').textContent = data.mode === 'pairs' ? 'Pareja' : 'Participante';
+    document.getElementById('entityHeader').textContent = data.mode === 'pairs' ? 'Pareja' : 'Jugador';
 
     document.getElementById('meta').textContent =
       `${data.mode === 'pairs' ? 'Por parejas' : 'Individual'} · ` +
@@ -738,13 +827,23 @@
       </tr>`).join('');
 
     if (validCount !== total) {
+
+      const pendingMsg =
+        document.getElementById('pendingMsg');
+
       document.getElementById('podiumBtn').style.display =
         'none';
-      document.getElementById('pendingMsg').style.display =
+
+      pendingMsg.style.display =
         'block';
-      document.getElementById('pendingMsg').textContent =
-        `Faltan ${total - validCount} partido(s) válido(s). El podio se habilita al completar todos los partidos.`;
-    }
+
+      pendingMsg.className =
+        'alerta-faltantes';
+
+      pendingMsg.textContent =
+        `Faltan ${total - validCount} partido(s) válido(s). ` +
+        `El podio se habilita al completar todos los partidos.`;
+}
   </script>
 
   <script src="assets/js/lucide.min.js"></script>

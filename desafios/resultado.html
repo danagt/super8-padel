@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0a6772">
+
+  <title>Desafíos x 3 - Resultado</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="header-row">
+      <div class="header-title">
+        <div class="header-text">
+          <h1>Resultado final</h1>
+          <!-- <small>Resultado final</small> -->
+        </div>
+      </div>
+
+      <a
+        class="btn ghost"
+        href="../inicio.html"
+      >
+        <i data-lucide="house"></i>
+        Inicio
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- GANADOR -->
+  <section
+    id="resultCard"
+    class="card result-hero"
+  ></section>
+
+  <!-- PODIO -->
+  <section class="card">
+    <h2
+      style="text-align:center; margin-top:0"
+    >
+      Podio final
+    </h2>
+    <div
+      id="podium"
+      class="podium"
+    ></div>
+    <div
+      id="tieNote"
+      class="tie-note"
+      style="display:none"
+    >
+      No se juega desempate por 2° y 3° puesto.
+    </div>
+  </section>
+
+
+
+  <!-- ACCIONES -->
+
+  <section class="card">
+    <div class="actions">
+
+      <a
+        class="btn secondary"
+        href="../inicio.html"
+      >
+        <i data-lucide=""></i>
+        <strong>Inicio</strong>
+      </a>
+
+      <a
+        class="btn primary"
+        href="../historial.html"
+      >
+        <i data-lucide=""></i>
+        <strong>Historial</strong>
+      </a>
+
+      <button
+        class="accent"
+        type="button"
+        onclick="shareWhatsApp()"
+      >
+        <i data-lucide=""></i>
+        <strong>Compartir por WhatsApp</strong>
+      </button>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    © 2026 Dana Grecco
+  </div>
+</footer>
+
+<!-- LUCIDE -->
+<script src="../assets/js/lucide.min.js"></script>
+
+<script>
+
+  /* =========================
+     LOCAL STORAGE SEGURO
+     ========================= */
+
+  function safeReadList(key) {
+    try {
+      const raw =
+        localStorage.getItem(key);
+      if (!raw)
+        return [];
+
+      const parsed =
+        JSON.parse(raw);
+      return Array.isArray(parsed)
+        ? parsed
+        : [];
+    } catch (error) {
+      console.error(
+        `No se pudo leer ${key}:`,
+        error
+      );
+      return [];
+    }
+  }
+
+  /* =========================
+     OBTENER DESAFÍO
+     ========================= */
+
+  const resultId =
+    Number(
+      localStorage.getItem(
+        'desafiosx3_result_id'
+      )
+    );
+
+  const history =
+    safeReadList(
+      'desafiosx3_history'
+    );
+
+  const challenge =
+    history.find(
+      x =>
+        Number(x.id) ===
+        resultId
+    ) || null;
+
+  /*
+    Si por algún motivo no existe
+    el desafío seleccionado,
+    volvemos al historial general.
+  */
+
+  if (!challenge) {
+    location.href =
+      '../historial.html';
+  }
+
+  /* =========================
+     UTILIDADES
+     ========================= */
+
+  function getPair(id) {
+    return challenge.pairs.find(
+      p => p.id === id
+    );
+  }
+
+  function formatDate(v) {
+    if (!v)
+      return '';
+    const p =
+      v.split('-');
+    return p.length === 3
+      ? `${p[2]}/${p[1]}/${p[0]}`
+      : v;
+  }
+
+  /*
+    Tabla reglamentaria:
+    únicamente PG.
+
+    PP se usa solo para mantener
+    un orden estable visualmente,
+    no como regla de desempate
+    del campeón.
+  */
+
+  function baseOrder() {
+    return [
+      ...challenge.pairs
+    ].sort((a, b) => {
+      if (b.won !== a.won)
+        return b.won - a.won;
+      return a.name.localeCompare(
+        b.name,
+        'es'
+      );
+    });
+  }
+
+  /* =========================
+     ORDEN DEL PODIO
+     ========================= */
+
+  function displayOrder() {
+    const winner =
+      getPair(
+        challenge.winnerId
+      );
+
+    if (!winner)
+      return baseOrder();
+
+    /*
+      El campeón siempre primero.
+
+      Segundo y tercero:
+      no se juega desempate.
+    */
+
+    const rest =
+      baseOrder()
+        .filter(
+          p =>
+            p.id !== winner.id
+        );
+
+    return [
+      winner,
+      ...rest
+    ];
+  }
+
+  function positionLabels(order) {
+
+    const labels = [
+      '1°',
+      '2°',
+      '3°'
+    ];
+
+    /*
+      Si 2° y 3° tienen
+      la misma cantidad de PG,
+      quedan empatados.
+    */
+
+    if (
+      order.length >= 3 &&
+      order[1].won === order[2].won
+    ) {
+      labels[1] =
+        '2° compartido';
+      labels[2] =
+        '2° compartido';
+    }
+
+    return labels;
+  }
+
+  const order =
+    displayOrder();
+
+  const labels =
+    positionLabels(order);
+
+  /* =========================
+     MOSTRAR GANADOR
+     ========================= */
+
+  const winner =
+    getPair(
+      challenge.winnerId
+    );
+
+  if (winner) {
+    document.getElementById(
+      'resultCard'
+    ).innerHTML = `
+      <i
+        class="result-icon"
+        data-lucide=""
+      ></i>
+      <h2>
+        Desafío finalizado
+      </h2>
+      <div class="winner-name">
+        ${winner.name}
+      </div>
+      <div class="winner-wins">
+        Ganadores
+        · ${formatDate(challenge.date)}
+      </div>
+    `;
+  }
+
+  /* =========================
+     PODIO
+     ========================= */
+
+  const medals = ['🥇', '🥈', '🥉'];
+
+  document.getElementById(
+    'podium'
+  ).innerHTML =
+    order.map(
+      (p, i) => `
+        <div
+          class="podium-card
+          ${i === 0 ? 'first' : ''}"
+        >
+
+          <div class="podium-medal">
+            ${medals[i]}
+          </div>
+
+          <div class="podium-rank">
+            ${labels[i]}
+          </div>
+
+          <div class="podium-name">
+            ${p.name}
+          </div>
+
+          <div class="podium-score">
+            ${p.won}
+            ganados
+            ·
+            ${p.played}
+            jugados
+          </div>
+
+        </div>
+      `
+    ).join('');
+
+  /*
+    Mostrar aviso si
+    2° y 3° están empatados.
+  */
+
+  if (
+    labels[1] ===
+    labels[2]
+  ) {
+    document.getElementById(
+      'tieNote'
+    ).style.display =
+      'block';
+  }
+
+
+  /* =========================
+     WHATSAPP
+     ========================= */
+
+  function shareWhatsApp() {
+    if (!winner)
+      return;
+
+    let message =
+      `${challenge.name}\n`;
+
+    message +=
+      `${formatDate(challenge.date)}\n\n`;
+
+    message +=
+      `Ganadores: ${winner.name}\n\n`;
+
+    message +=
+      `Clasificación final:\n\n`;
+
+    order.forEach(
+      (p, i) => {
+        message +=
+          `${labels[i]} ${p.name}\n`;
+      }
+    );
+
+    message +=
+      `\nPartidos jugados: ${challenge.matches?.length || 0}`;
+
+    if (
+      challenge.tieBreakMatches?.length
+    ) {
+      message +=
+        `\nDesempates: ${challenge.tieBreakMatches.length}`;
+    }
+
+    const url =
+      'https://wa.me/?text=' +
+      encodeURIComponent(
+        message
+      );
+
+    window.open(
+      url,
+      '_blank'
+    );
+  }
+
+  /* =========================
+     ICONOS
+     ========================= */
+
+  lucide.createIcons();
+
+</script>
+</body>
+</html>

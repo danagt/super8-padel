@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Super 8 - Nuevo torneo</title>
+  <title>Super 8 - Nuevo juego</title>
   <style>
     :root {
       --caribbean: #0a6772;
@@ -494,6 +494,28 @@
       flex-wrap: wrap;
     }
 
+    svg.lucide {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+      vertical-align: middle;
+    }
+
+    button svg.lucide,
+    a.btn svg.lucide {
+      margin-right: 5px;
+    }
+
+    .header-icon svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    button svg.lucide:last-child {
+      margin-right: 0;
+      margin-left: 5px;
+    }
+
     @media(max-width:600px) {
 
       .grid,
@@ -513,6 +535,7 @@
       main {
         padding: 12px 12px 24px
       }
+
       .actions {
         flex-direction: column;
         align-items: center;
@@ -525,6 +548,45 @@
         text-align: center;
       }
     }
+
+
+    /* ===== Ajuste tipográfico móvil general ===== */
+    @media(max-width:600px) {
+      header {
+        padding: 12px 14px;
+      }
+
+      .header-text h1 {
+        font-size: 17px;
+      }
+
+      main {
+        padding: 12px 12px 22px;
+      }
+
+      .card {
+        padding: 12px;
+        margin-bottom: 12px;
+        border-radius: 16px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 15px;
+      }
+
+      .hero {
+        padding: 18px 16px;
+        border-radius: 18px;
+      }
+
+      .hero h2 {
+        font-size: 22px;
+      }
+    }
   </style>
 </head>
 
@@ -534,27 +596,53 @@
       <div class="header-row">
 
         <div class="header-title">
-          <span class="header-icon">🎾</span>
+          <span class="header-icon">
+            <i data-lucide=""></i>
+          </span>
 
           <div class="header-text">
             <h1>Super 8 Padel</h1>
-            <small id="subtitle">Nuevo torneo</small>
+            <small id="subtitle">Nuevo juego</small>
           </div>
         </div>
 
-        <a class="btn ghost" href="inicio.html">🏠 Inicio</a>
+        <a class="btn ghost" href="inicio.html">
+          <i data-lucide="house"></i>
+          Inicio
+        </a>
 
       </div>
     </div>
   </header>
   <main>
     <div class="card">
-      <h2>Datos del torneo</h2>
+      <h2>Datos del juego</h2>
       <div class="grid">
-        <div><label>Nombre del torneo</label><input id="tname" placeholder="Ej.: Super 8 del jueves"></div>
-        <div><label>Fecha</label><input id="tdate" type="date"></div>
-        <div><label>Puntos para ganar cada partido</label><input id="target" type="number" min="1" step="1" value="4">
+        <div>
+          <label>Nombre del encuentro</label>
+          <input
+            id="tname"
+            placeholder="Ej.: Super 8 del jueves"
+            ondblclick="this.select()"
+          >
         </div>
+        <div>
+          <label>Fecha</label>
+          <input 
+            id="tdate" 
+            type="date"
+            >
+          </div>
+          <div>
+            <label>Puntos para ganar cada partido</label>
+            <input 
+              id="target" 
+              type="number" 
+              min="1" 
+              step="1" 
+              value="4"
+            >
+          </div>
       </div>
       <div class="note" style="margin-top:12px">El resultado debe llegar exactamente al puntaje objetivo. Ej.: si se
         juega a 4, son válidos 4-0, 4-1, 4-2 o 4-3.</div>
@@ -562,8 +650,21 @@
     <div class="card">
       <h2 id="entryTitle"></h2>
       <div id="entries"></div>
-      <div class="actions"><button class="secondary" onclick="example()">Cargar ejemplo</button><button class="primary"
-          onclick="createTournament()">Comenzar torneo</button></div>
+
+      <div class="actions">
+
+        <button class="secondary" onclick="example()">
+          <i data-lucide=""></i>
+          Cargar ejemplo
+        </button>
+
+        <button class="primary" onclick="createTournament()">
+          <i data-lucide=""></i>
+          Comenzar juego
+        </button>
+
+      </div>
+
     </div>
   </main>
 
@@ -571,18 +672,20 @@
 
     <div class="confirm-box">
 
-      <h2>¿Confirmás los datos del torneo?</h2>
+      <h2>¿Confirmás los datos cargados?</h2>
 
       <div id="confirmContent" class="confirm-data"></div>
 
       <div class="confirm-actions">
 
         <button class="secondary" onclick="closeConfirmation()">
-          ← Volver a editar
+          <i data-lucide=""></i>
+          Volver a editar
         </button>
 
         <button class="primary" onclick="confirmTournament()">
-          Comenzar torneo
+          <i data-lucide=""></i>
+          Comenzar
         </button>
 
       </div>
@@ -625,22 +728,104 @@
 
     document.getElementById('subtitle').textContent =
       mode === 'pairs'
-        ? 'Nuevo torneo · Por parejas'
-        : 'Nuevo torneo · Individual';
+        ? 'Por parejas'
+        : 'Individual';
 
     function renderEntries() {
       const box = document.getElementById('entries');
+
       if (mode === 'pairs') {
         document.getElementById('entryTitle').textContent = '8 parejas';
+
         let h = '<div class="grid">';
-        for (let i = 1; i <= 8; i++)h += `<div class="pair-card"><h3>Pareja ${i}</h3><label>Integrante 1</label><input id="p${i}a" placeholder="Nombre"><div style="height:8px"></div><label>Integrante 2</label><input id="p${i}b" placeholder="Nombre"></div>`;
-        h += '</div>'; box.innerHTML = h;
+
+        for (let i = 1; i <= 8; i++) {
+          h += `
+            <div class="pair-card">
+              <h3>Pareja ${i}</h3>
+
+              <label>Integrante 1</label>
+              <input
+                id="p${i}a"
+                placeholder="Nombre"
+                ondblclick="this.select()"
+              >
+
+              <div style="height:8px"></div>
+
+              <label>Integrante 2</label>
+              <input
+                id="p${i}b"
+                placeholder="Nombre"
+                ondblclick="this.select()"
+              >
+            </div>
+          `;
+        }
+
+        h += '</div>';
+        box.innerHTML = h;
+
       } else {
+
         document.getElementById('entryTitle').textContent = '8 participantes';
+
         let h = '<div class="grid">';
-        for (let i = 1; i <= 8; i++)h += `<div><label>Participante ${i}</label><input id="p${i}" placeholder="Nombre"></div>`;
-        h += '</div>'; box.innerHTML = h;
+
+        for (let i = 1; i <= 8; i++) {
+          h += `
+            <div>
+              <label>Participante ${i}</label>
+              <input
+                id="p${i}"
+                placeholder="Nombre"
+                ondblclick="this.select()"
+              >
+            </div>
+          `;
+        }
+
+        h += '</div>';
+        box.innerHTML = h;
       }
+    }
+
+    function activarAvanceFormulario() {
+      const fields = [
+        document.getElementById('tname'),
+        document.getElementById('tdate'),
+        document.getElementById('target')
+      ];
+      if (mode === 'pairs') {
+        for (let i = 1; i <= 8; i++) {
+          fields.push(
+            document.getElementById(`p${i}a`),
+            document.getElementById(`p${i}b`)
+          );
+        }
+      } else {
+        for (let i = 1; i <= 8; i++) {
+          fields.push(
+            document.getElementById(`p${i}`)
+          );
+        }
+      }
+      fields.forEach((input, index) => {
+        input.addEventListener('keydown', event => {
+          if (event.key !== 'Enter') return;
+          event.preventDefault();
+          if (index < fields.length - 1) {
+            fields[index + 1].focus();
+          }
+        });
+      });
+    }
+    renderEntries();
+    activarAvanceFormulario();
+    if (window.matchMedia('(max-width: 600px)').matches) {
+      setTimeout(() => {
+        document.getElementById('tname').focus();
+      }, 300);
     }
 
     function example() {
@@ -824,7 +1009,7 @@
 
       document.getElementById('confirmContent').innerHTML = `
 
-        <strong>Torneo:</strong>
+        <strong>Juego:</strong>
         ${t.name}
 
         <br>
@@ -885,15 +1070,12 @@
         'rondas.html';
     }
 
-
-
-    renderEntries();
   </script>
 
-    <script src="assets/js/lucide.min.js"></script>
-      <script>
-        lucide.createIcons();
-      </script>
+  <script src="assets/js/lucide.min.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
 
 </body>
 

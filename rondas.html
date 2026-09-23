@@ -449,6 +449,28 @@
       font-size: 15px
     }
 
+    svg.lucide {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+      vertical-align: middle;
+    }
+
+    button svg.lucide,
+    a.btn svg.lucide {
+      margin-right: 5px;
+    }
+
+    button svg.lucide:last-child {
+      margin-right: 0;
+      margin-left: 5px;
+    }
+
+    .header-icon svg {
+      width: 21px;
+      height: 21px;
+    }
+
     @media(max-width:600px) {
 
       .grid,
@@ -481,6 +503,45 @@
         text-align: center;
       }
     }
+
+
+    /* ===== Ajuste tipográfico móvil general ===== */
+    @media(max-width:600px) {
+      header {
+        padding: 12px 14px;
+      }
+
+      .header-text h1 {
+        font-size: 17px;
+      }
+
+      main {
+        padding: 12px 12px 22px;
+      }
+
+      .card {
+        padding: 12px;
+        margin-bottom: 12px;
+        border-radius: 16px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 15px;
+      }
+
+      .hero {
+        padding: 18px 16px;
+        border-radius: 18px;
+      }
+
+      .hero h2 {
+        font-size: 22px;
+      }
+    }
   </style>
 </head>
 
@@ -490,15 +551,21 @@
       <div class="header-row">
 
         <div class="header-title">
-          <span class="header-icon">🎾</span>
+          <span class="header-icon">
+            <i data-lucide=""></i>
+          </span>
 
           <div class="header-text">
-            <h1>Super 8 Padel</h1>
+            <h1>Super 8</h1>
             <small id="subtitle">Rondas</small>
           </div>
         </div>
 
-        <a class="btn ghost" href="inicio.html" onclick="return saveBeforeHome()">🏠 Inicio</a>
+        <a class="btn ghost" href="inicio.html#juegos-en-curso" onclick="return saveBeforeHome()">
+
+          <i data-lucide="house"></i>
+          Inicio
+        </a>
 
       </div>
     </div>
@@ -511,16 +578,31 @@
       <div class="progress"><span id="bar"></span></div>
       <div class="muted" id="prog"></div>
       <div id="matches"></div>
-      <div class="actions"><button class="secondary" onclick="prev()">← Anterior</button><button class="secondary"
-          onclick="next()">Siguiente →</button><button class="primary" onclick="goResults()">Ver clasificación</button>
+
+      <div class="actions">
+        <button id="prevBtn" class="secondary" onclick="prev()">
+          <i data-lucide=""></i>
+          Anterior
+        </button>
+
+        <button class="secondary" onclick="next()">
+          Siguiente
+          <i data-lucide=""></i>
+        </button>
+
+        <button class="primary" onclick="goResults()">
+          <i data-lucide=""></i>
+          Ver clasificación
+        </button>
       </div>
+
     </div>
   </main>
 
   <footer>
     <div class="wrap">© 2026 Dana Grecco</div>
   </footer>
-  
+
   <script>
     const individualFixture = [
       [[1, 2, 3, 4], [5, 6, 7, 8]],
@@ -589,10 +671,89 @@
       if (!((a === target && b < target) || (b === target && a < target))) return { valid: false, msg: `Uno de los dos resultados debe ser exactamente ${target}.` };
       return { valid: true, a, b };
     }
+
+    function activarAvanceAutomatico() {
+      const inputs = [
+        ...document.querySelectorAll(
+          '#matches .score input'
+        )
+      ];
+      inputs.forEach((input, index) => {
+        /* Al volver a un campo,
+          selecciona el número para corregirlo fácil */
+        input.addEventListener('focus', () => {
+          input.select();
+        });
+        input.addEventListener('input', () => {
+          if (input.value === '') {
+            return;
+          }
+          const value = Number(input.value);
+          const target = Number(data.target);
+          if (
+            !Number.isInteger(value) ||
+            value < 0 ||
+            value > target
+          ) {
+            return;
+          }
+          /* Hay otro resultado después */
+          if (index < inputs.length - 1) {
+            inputs[index + 1].focus();
+          } else {
+            /* Último resultado de la ronda:
+              dejamos seleccionado Siguiente */
+            const nextButton =
+              document.querySelector(
+                'button[onclick="next()"]'
+              );
+            if (nextButton) {
+              nextButton.focus();
+            }
+          }
+        });
+
+        /* También permite usar la tecla
+          Siguiente / Enter del teclado */
+        input.addEventListener(
+          'keydown',
+          event => {
+            if (event.key !== 'Enter') {
+              return;
+            }
+            event.preventDefault();
+            if (index < inputs.length - 1) {
+              inputs[index + 1].focus();
+            } else {
+              const nextButton =
+                document.querySelector(
+                  'button[onclick="next()"]'
+                );
+              if (nextButton) {
+                nextButton.focus();
+              }
+            }
+          }
+        );
+      });
+    }
+
     function render() {
-      document.getElementById('title').textContent = `Ronda ${current + 1} de 7`;
-      document.getElementById('subtitle').textContent = `${data.mode === 'pairs' ? 'Por parejas' : 'Individual'} · Ronda ${current + 1}`;
-      document.getElementById('targetInfo').textContent = `Partidos a ${data.target} puntos`;
+
+      document.getElementById('title').textContent = 
+        `Ronda ${current + 1} de 7`;
+
+      document.getElementById('prevBtn').style.display =
+        current === 0 ? 'none' : '';
+
+      document.getElementById('subtitle').textContent = 
+        `${data.mode === 'pairs' 
+        ? 'Parejas' 
+        : 'Individual'} · Ronda ${current + 1}`;
+
+      document.getElementById('targetInfo').textContent = 
+        `Partidos a ${data.target} puntos`;
+
       let out = '';
       fixture[current].forEach((m, mi) => {
         const id = `r${current + 1}m${mi + 1}`, z = data.results[id] || {};
@@ -600,15 +761,57 @@
         if (data.mode === 'pairs') { left = displayEntity(data, m[0]); right = displayEntity(data, m[1]); }
         else { left = `${displayEntity(data, m[0])} + ${displayEntity(data, m[1])}`; right = `${displayEntity(data, m[2])} + ${displayEntity(data, m[3])}`; }
         out += `<div class="match"><div class="match-title">Partido ${mi + 1}</div><div class="teams">
-  <div class="team">${left}</div>
-  <div class="score"><input id="${id}a" type="number" min="0" max="${data.target}" step="1" value="${z.a ?? ''}"></div>
-  <div class="dash">-</div>
-  <div class="score"><input id="${id}b" type="number" min="0" max="${data.target}" step="1" value="${z.b ?? ''}"></div>
-  <div class="team">${right}</div></div>
-  <div class="status ${z.valid ? 'ok' : (z.error ? 'error' : '')}" id="${id}s">${z.valid ? 'Resultado válido' : (z.error || 'Resultado pendiente')}</div></div>`;
+    <div class="team">${left}</div>
+    <div class="score">
+      <input 
+        id="${id}a" 
+        type="number" 
+        min="0" 
+        max="${data.target}" 
+        step="1" 
+        value="${z.a ?? ''}">
+    </div>
+
+    <div class="dash">-</div>
+
+    <div class="score">
+      <input 
+        id="${id}b" 
+        type="number" 
+        min="0" 
+        max="${data.target}" 
+        step="1" 
+        value="${z.b ?? ''}">
+    </div>
+    <div class="team">${right}</div>
+    </div>
+    <div class="status ${z.valid ? 'ok' : (z.error ? 'error' : '')}" id="${id}s">${z.valid ? 'Resultado válido' : (z.error || 'Resultado pendiente')}</div></div>`;
       });
-      document.getElementById('matches').innerHTML = out; progress();
+
+      document.getElementById('matches').innerHTML = out;
+      activarAvanceAutomatico()
+      progress();
+
+      /* FOCO AUTOMÁTICO SOLO EN CELULAR */
+      if (window.matchMedia('(max-width: 600px)').matches) {
+        setTimeout(() => {
+
+          const inputs =
+            document.querySelectorAll('#matches input');
+
+          const firstEmpty =
+            Array.from(inputs).find(
+              input => input.value === ''
+            );
+
+          if (firstEmpty) {
+            firstEmpty.focus();
+          }
+
+        }, 300);
+      }
     }
+
     function saveRound(blockOnError = true) {
       let hasError = false;
       fixture[current].forEach((m, mi) => {
@@ -639,10 +842,10 @@
   </script>
 
   <script src="assets/js/lucide.min.js"></script>
-    <script>
-      lucide.createIcons();
-    </script>
-    
+  <script>
+    lucide.createIcons();
+  </script>
+
 </body>
 
 </html>

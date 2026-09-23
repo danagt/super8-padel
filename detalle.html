@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <title>Super 8 Padel - Detalle del torneo</title>
+  <title>Super 8 Padel - Detalle del juego</title>
 
   <style>
     :root {
@@ -110,7 +110,7 @@
 
     .info-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0,1fr));
       gap: 12px;
     }
 
@@ -130,6 +130,7 @@
 
     .info-value {
       font-size: 15px;
+      word-break: break-word;
     }
 
     .badge {
@@ -174,12 +175,12 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 620px;
+      min-width: 0;
     }
 
     th,
     td {
-      padding: 10px 7px;
+      padding: 9px 5px;
       border-bottom: 1px solid #dde7e2;
       text-align: center;
       font-size: 13px;
@@ -278,7 +279,8 @@
 
       .info-grid,
       .participants {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
       }
 
       main {
@@ -304,7 +306,57 @@
         max-width: 280px;
         text-align: center;
       }
+
+      th,
+      td {
+        padding: 7px 3px;
+        font-size: 12px;
+      }
+
+      th {
+        font-size: 12px;
+      }
     }
+  
+
+    /* ===== Ajuste tipográfico móvil general ===== */
+    @media(max-width:600px) {
+      header {
+        padding: 12px 14px;
+      }
+
+      .header-text h1 {
+        font-size: 17px;
+      }
+
+      main {
+        padding: 12px 12px 22px;
+      }
+
+      .card {
+        padding: 12px 12px 16px;
+        margin-bottom: 12px;
+        border-radius: 16px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 15px;
+      }
+
+      .hero {
+        padding: 18px 16px;
+        border-radius: 18px;
+      }
+
+      .hero h2 {
+        font-size: 22px;
+      }
+    }
+
   </style>
 </head>
 
@@ -316,12 +368,12 @@
 
         <div class="header-title">
           <span class="header-icon">
-            <i data-lucide="file-text"></i>
+            <i data-lucide=""></i>
           </span>
 
           <div class="header-text">
-            <h1>Super 8 Padel</h1>
-            <small>Detalle del torneo</small>
+            <h1>Super 8 - Detalle</h1>
+            <small></small>          
           </div>
         </div>
 
@@ -336,7 +388,7 @@
 
   <main>
 
-    <!-- DATOS DEL TORNEO -->
+    <!-- DATOS DEL JUEGO -->
 
     <div class="card">
 
@@ -371,18 +423,7 @@
     </div>
 
 
-    <!-- PARTICIPANTES -->
-
-    <div class="card">
-
-      <h2 id="participantsTitle">Participantes</h2>
-
-      <div id="participants" class="participants"></div>
-
-    </div>
-
-
-    <!-- CLASIFICACIÓN -->
+   <!-- CLASIFICACIÓN -->
 
     <div class="card">
 
@@ -395,44 +436,34 @@
           <thead>
             <tr>
               <th>Pos.</th>
-              <th id="entityTitle">Participante</th>
+              <th id="entityTitle">Jugador</th>
               <th>PJ</th>
               <th>PG</th>
-              <th>GF</th>
-              <th>GC</th>
+              <th>A Favor</th>
+              <th>En Contra</th>
               <th>Dif.</th>
             </tr>
           </thead>
-
           <tbody id="classification"></tbody>
-
         </table>
-
       </div>
 
-      <div class="actions">
-
-        <a class="btn secondary" href="resultados.html">
-          <i data-lucide="chart-no-axes-column"></i>
-          Ver clasificación
+     <div class="actions">
+        <a class="btn secondary" href="historial.html">
+          <i data-lucide=""></i>
+          Historial
         </a>
-
-        <a class="btn accent" href="podio.html">
-          <i data-lucide="trophy"></i>
-          Ver podio
+        <a class="btn accent" href="inicio.html">
+          <i data-lucide=""></i>
+          Inicio
         </a>
-
       </div>
-
     </div>
-
   </main>
-
 
   <footer>
     <div class="wrap">© 2026 Dana Grecco</div>
   </footer>
-
 
   <script>
 
@@ -451,188 +482,86 @@
     }
 
     function getCurrentTournament() {
-
       const id = getCurrentId();
-
       if (!id) return null;
-
       return getTournaments().find(
         t => String(t.id) === String(id)
       ) || null;
     }
 
-
     function formatDate(v) {
-
       if (!v) return '';
-
       const p = v.split('-');
-
       return p.length === 3
         ? `${p[2]}/${p[1]}/${p[0]}`
         : v;
     }
-
 
     /* =============================
        FIXTURES
        ============================= */
 
     const individualFixture = [
-
       [[1, 2, 3, 4], [5, 6, 7, 8]],
-
       [[1, 3, 5, 7], [2, 4, 6, 8]],
-
       [[2, 3, 6, 7], [1, 4, 5, 8]],
-
       [[1, 5, 2, 6], [3, 7, 4, 8]],
-
       [[2, 5, 4, 7], [1, 6, 3, 8]],
-
       [[2, 8, 3, 5], [1, 7, 4, 6]],
-
       [[3, 6, 4, 5], [1, 8, 2, 7]]
-
     ];
-
 
     const pairsFixture = [
-
       [[1, 8], [2, 7], [3, 6], [4, 5]],
-
       [[1, 7], [8, 6], [2, 5], [3, 4]],
-
       [[1, 6], [7, 5], [8, 4], [2, 3]],
-
       [[1, 5], [6, 4], [7, 3], [8, 2]],
-
       [[1, 4], [5, 3], [6, 2], [7, 8]],
-
       [[1, 3], [4, 2], [5, 8], [6, 7]],
-
       [[1, 2], [3, 8], [4, 7], [5, 6]]
-
     ];
 
-
     /* =============================
-       DATOS DEL TORNEO
+       DATOS DEL JUEGO
        ============================= */
 
     const data = getCurrentTournament();
-
     if (!data) {
       location.href = 'historial.html';
     }
 
-
     function displayEntity(id) {
-
       if (data.mode === 'pairs') {
-
         const p = data.pairs[id - 1];
-
         return `${p.member1} / ${p.member2}`;
       }
-
       return data.players[id - 1];
     }
-
 
     /* =============================
        MOSTRAR DATOS
        ============================= */
 
     function renderTournamentInfo() {
-
       document.getElementById('tournamentName').textContent =
         data.name;
-
       document.getElementById('tournamentDate').textContent =
         formatDate(data.date);
-
       document.getElementById('tournamentMode').textContent =
         data.mode === 'pairs'
           ? 'Por parejas'
           : 'Individual';
-
       document.getElementById('tournamentTarget').textContent =
         `${data.target} puntos`;
-
     }
-
-
-    /* =============================
-       PARTICIPANTES
-       ============================= */
-
-    function renderParticipants() {
-
-      const box =
-        document.getElementById('participants');
-
-      let html = '';
-
-      if (data.mode === 'pairs') {
-
-        document.getElementById('participantsTitle')
-          .textContent = 'Parejas';
-
-        document.getElementById('entityTitle')
-          .textContent = 'Pareja';
-
-        data.pairs.forEach((p, i) => {
-
-          html += `
-            <div class="participant">
-              <span class="participant-number">
-                ${i + 1}.
-              </span>
-              ${p.member1} / ${p.member2}
-            </div>
-          `;
-
-        });
-
-      } else {
-
-        document.getElementById('participantsTitle')
-          .textContent = 'Participantes';
-
-        document.getElementById('entityTitle')
-          .textContent = 'Participante';
-
-        data.players.forEach((name, i) => {
-
-          html += `
-            <div class="participant">
-              <span class="participant-number">
-                ${i + 1}.
-              </span>
-              ${name}
-            </div>
-          `;
-
-        });
-
-      }
-
-      box.innerHTML = html;
-
-    }
-
 
     /* =============================
        ESTADÍSTICAS
        ============================= */
 
     function calculateStats() {
-
       const stats = [];
-
       for (let i = 1; i <= 8; i++) {
-
         stats.push({
           id: i,
           name: displayEntity(i),
@@ -642,24 +571,17 @@
           gc: 0,
           diff: 0
         });
-
       }
 
-
       if (data.mode === 'pairs') {
-
         pairsFixture.forEach((round, ri) => {
-
           round.forEach((match, mi) => {
-
             const result =
               data.results[
               `r${ri + 1}m${mi + 1}`
               ];
-
             if (!result || !result.valid)
               return;
-
             const left = stats[match[0] - 1];
             const right = stats[match[1] - 1];
 
@@ -677,22 +599,15 @@
             } else {
               right.pg++;
             }
-
           });
-
         });
-
       } else {
-
         individualFixture.forEach((round, ri) => {
-
           round.forEach((match, mi) => {
-
             const result =
               data.results[
               `r${ri + 1}m${mi + 1}`
               ];
-
             if (!result || !result.valid)
               return;
 
@@ -707,14 +622,12 @@
             ];
 
             teamA.forEach(p => {
-
               p.pj++;
               p.gf += result.a;
               p.gc += result.b;
 
               if (result.a > result.b)
                 p.pg++;
-
             });
 
             teamB.forEach(p => {
@@ -725,13 +638,9 @@
 
               if (result.b > result.a)
                 p.pg++;
-
             });
-
           });
-
         });
-
       }
 
       stats.forEach(s => {
@@ -739,9 +648,7 @@
       });
 
       return stats;
-
     }
-
 
     /* =============================
        ENFRENTAMIENTO DIRECTO
@@ -753,7 +660,6 @@
         data.mode === 'pairs'
           ? pairsFixture
           : individualFixture;
-
 
       for (let ri = 0; ri < fixture.length; ri++) {
 
@@ -773,7 +679,6 @@
           if (!result || !result.valid)
             continue;
 
-
           if (data.mode === 'pairs') {
 
             if (
@@ -784,9 +689,7 @@
               return result.a > result.b
                 ? id1
                 : id2;
-
             }
-
 
             if (
               match[0] === id2 &&
@@ -796,7 +699,6 @@
               return result.a > result.b
                 ? id2
                 : id1;
-
             }
 
           } else {
@@ -811,7 +713,6 @@
               match[3]
             ];
 
-
             if (
               teamA.includes(id1) &&
               teamB.includes(id2)
@@ -823,7 +724,6 @@
 
             }
 
-
             if (
               teamA.includes(id2) &&
               teamB.includes(id1)
@@ -832,19 +732,13 @@
               return result.a > result.b
                 ? id2
                 : id1;
-
             }
-
           }
-
         }
-
       }
 
       return null;
-
     }
-
 
     /* =============================
        ORDENAR CLASIFICACIÓN
@@ -863,9 +757,7 @@
           return b.diff - a.diff;
 
         return 0;
-
       });
-
 
       let start = 0;
 
@@ -881,10 +773,8 @@
           end++;
         }
 
-
         const group =
           stats.slice(start, end);
-
 
         if (group.length === 2) {
 
@@ -918,18 +808,14 @@
           group.forEach((player, index) => {
             stats[start + index] = player;
           });
-
         }
 
         start = end;
 
       }
 
-
       return stats;
-
     }
-
 
     /* =============================
        MOSTRAR CLASIFICACIÓN
@@ -958,11 +844,8 @@
               </td>
 
               <td>${p.pj}</td>
-
               <td>${p.pg}</td>
-
               <td>${p.gf}</td>
-
               <td>${p.gc}</td>
 
               <td>
@@ -974,9 +857,7 @@
           `;
 
         }).join('');
-
     }
-
 
     /* =============================
        INICIAR
@@ -984,7 +865,10 @@
 
     renderTournamentInfo();
 
-    renderParticipants();
+    document.getElementById('entityTitle').textContent =
+      data.mode === 'pairs'
+      ? 'Pareja'
+      : 'Jugador';
 
     renderClassification();
 

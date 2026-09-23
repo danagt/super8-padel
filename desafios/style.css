@@ -1,0 +1,1460 @@
+/* ==================================================
+   DESAFÍOS X 3
+   ESTILOS GENERALES
+   ================================================== */
+
+:root {
+  --caribbean: #0a6772;
+  --cambridge: #99bdb0;
+  --ecru: #dcc27f;
+  --sienna: #df8869;
+  --redwood: #a44a47;
+
+  --desafio: #cc5a30;
+  --desafio-dark: #b9684f;
+  --desafio-soft: #f8e5dd;
+
+  --bg: #f7f4ee;
+  --card: #fffdf9;
+  --text: #2f3a3c;
+  --muted: #6f7d7b;
+  --border: #d7ddd8;
+}
+
+
+/* ==================================================
+   BASE
+   ================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+header {
+  background: var(--desafio);
+  color: #fff;
+  padding: 12px 16px;
+}
+
+header .wrap,
+main,
+footer .wrap {
+  max-width: 820px;
+  margin: auto;
+}
+
+main {
+  padding: 16px 16px 30px;
+}
+
+footer {
+  padding: 8px 16px 28px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--redwood);
+}
+
+
+/* ==================================================
+   HEADER
+   ================================================== */
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.header-row.center {
+  justify-content: center;
+}
+
+.header-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.header-title svg {
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-text h1 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.header-text small {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: #e7f1ee;
+}
+
+
+/* ==================================================
+   TARJETAS
+   ================================================== */
+
+.card {
+  background: var(--card);
+  border: 1px solid rgba(153, 189, 176, .4);
+  border-radius: 16px;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 5px 20px rgba(10, 103, 114, .08);
+}
+
+h2,
+h3 {
+  color: var(--desafio);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+
+/* ==================================================
+   HERO
+   ================================================== */
+
+.hero {
+  background: linear-gradient(
+    135deg,
+    var(--desafio),
+    var(--desafio-dark)
+  );
+
+  color: #fff;
+  border-radius: 24px;
+  padding: 26px 24px;
+  margin-bottom: 16px;
+  text-align: center;
+
+  box-shadow:
+    0 8px 24px
+    rgba(10, 103, 114, .18);
+}
+
+.hero h2 {
+  margin: 0 0 8px;
+  font-size: 30px;
+  color: #fff;
+}
+
+.hero h2 span {
+  color: var(--ecru);
+}
+
+.hero p {
+  margin: 0;
+  color: #e7f1ee;
+  line-height: 1.5;
+}
+
+.hero p + p {
+  margin-top: 10px;
+}
+
+.hero-icon {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 8px;
+}
+
+
+/* ==================================================
+   GRID
+   ================================================== */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.home-grid {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.home-grid .home-action {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto 16px;
+}
+
+.home-action {
+  text-align: center;
+  padding: 20px 18px;
+}
+
+.action-icon {
+  width: 34px;
+  height: 34px;
+  margin-bottom: 8px;
+  color: var(--desafio);
+}
+
+
+/* ==================================================
+   PAREJAS
+   ================================================== */
+
+.pair-card {
+  border: 1px solid var(--cambridge);
+  border-radius: 14px;
+  padding: 14px;
+  background: #f9fcfa;
+}
+
+.pair-card h3 {
+  margin: 0 0 10px;
+  text-align: center;
+}
+
+
+/* ==================================================
+   FORMULARIOS
+   ================================================== */
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--caribbean);
+  margin: 0 0 5px 2px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--cambridge);
+  border-radius: 12px;
+  font-size: 16px;
+  background: #fffefa;
+  color: var(--text);
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--caribbean);
+  box-shadow:
+    0 0 0 3px
+    rgba(10, 103, 114, .12);
+}
+
+
+/* ==================================================
+   BOTONES
+   ================================================== */
+
+button,
+a.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  text-decoration: none;
+  border: 0;
+  border-radius: 12px;
+
+  padding: 12px 15px;
+
+  cursor: pointer;
+
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: bold;
+
+  min-height: 44px;
+
+  touch-action: manipulation;
+}
+
+button svg,
+a.btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.primary {
+  background: var(--desafio);
+  color: #fff;
+}
+
+.secondary {
+  background: var(--cambridge);
+  color: #163c3f;
+}
+
+.accent {
+  background: var(--caribbean);
+  color: #fff;
+}
+
+.danger,
+.danger-btn,
+.delete-btn {
+  background: var(--redwood);
+  color: #fff;
+}
+
+.ghost {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .3);
+}
+
+button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+button:focus-visible,
+a.btn:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline:
+    3px solid
+    rgba(220, 194, 127, .85);
+
+  outline-offset: 2px;
+}
+
+
+/* ==================================================
+   ACCIONES
+   ================================================== */
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+
+/* ==================================================
+   TEXTOS AUXILIARES
+   ================================================== */
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.note {
+  background: #fff8e7;
+  border-left: 4px solid var(--ecru);
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #6d5a2c;
+}
+
+.error {
+  color: var(--redwood);
+  font-weight: bold;
+  text-align: center;
+}
+
+
+/* ==================================================
+   BADGES
+   ================================================== */
+
+.badge,
+.status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  padding: 5px 10px;
+
+  font-size: 11px;
+  font-weight: bold;
+
+  white-space: nowrap;
+}
+
+.badge.running {
+  background: #e8f3ef;
+  color: var(--desafio);
+}
+
+.badge.done {
+  background: #f5e2e1;
+  color: var(--redwood);
+}
+
+.badge.tie {
+  background: #fff1d5;
+  color: #7a5a13;
+}
+
+
+/* ==================================================
+   JUEGOS ACTIVOS / HISTORIAL
+   ================================================== */
+
+.active-item,
+.history-card {
+  border: 1px solid var(--cambridge);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 10px;
+  background: #fffefa;
+}
+
+.active-head,
+.history-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.active-head h3,
+.history-head h3 {
+  margin: 0 0 4px;
+}
+
+.active-actions,
+.history-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.history-card.centered,
+.active-item.centered {
+  text-align: center;
+}
+
+.history-card.centered .history-head,
+.active-item.centered .active-head {
+  align-items: center;
+}
+
+
+/* ==================================================
+   PARTIDO EN CURSO
+   ================================================== */
+
+.match-number {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.target-badge {
+  text-align: center;
+  margin: 8px 0 16px;
+}
+
+.court-title,
+.results-title {
+  text-align: center;
+  color: var(--desafio);
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: .08em;
+  margin: 12px 0;
+}
+
+.match-grid {
+  display: grid;
+
+  grid-template-columns:
+    1fr auto 1fr;
+
+  gap: 12px;
+
+  align-items: center;
+}
+
+.team {
+  text-align: center;
+  border:
+    none;
+  box-shadow: inset 0 0 0 1px var(--cambridge);
+  border-radius: 16px;
+  padding: 16px;
+  background: #f9fcfa;
+}
+
+.team h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.vs {
+  font-weight: bold;
+  color: var(--sienna);
+}
+
+.waiting {
+  text-align: center;
+
+  margin: 14px auto;
+
+  padding: 12px;
+
+  border-radius: 14px;
+
+  background: #fff8e7;
+
+  max-width: 480px;
+}
+
+.waiting-line {
+  display: flex;
+
+  gap: 6px;
+
+  justify-content: center;
+  align-items: center;
+
+  font-size: 12px;
+
+  color: #6d5a2c;
+
+  font-weight: bold;
+
+  margin-bottom: 5px;
+}
+
+.waiting-line svg {
+  width: 16px;
+  height: 16px;
+}
+
+.streak {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.streak.warning {
+  color: var(--redwood);
+  font-weight: bold;
+}
+
+
+/* ==================================================
+   ELEGIR GANADOR
+   ================================================== */
+
+.winner-options {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 10px;
+
+  margin: 12px 0;
+}
+
+.winner-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-width: 0;
+  min-height: 50px;
+  padding: 10px;
+  margin: 0;
+  border:
+    1px solid
+    var(--cambridge);
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.winner-option span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.winner-option input {
+  flex: 0 0 auto;
+
+  width: 20px;
+  height: 20px;
+
+  margin: 0;
+
+  accent-color:
+    var(--desafio);
+}
+
+.winner-option:has(
+  input:checked
+) {
+  background:
+    var(--desafio-soft);
+
+  border-color:
+    var(--desafio);
+}
+
+.winner-option:has(
+  input:checked
+) span {
+  color:
+    var(--desafio);
+}
+
+.confirm-winner-btn {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.confirm-winner-btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+/* ==================================================
+   ÚLTIMO RESULTADO
+   ================================================== */
+
+.last-result {
+  display: none;
+  background: #fff1e8;
+  color: #cc5a30;
+  border:
+    1px solid
+    #df8869;
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 12px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+/* ==================================================
+   DESEMPATE
+   ================================================== */
+
+.phase-box {
+  text-align: center;
+  background: #fff1e8;
+  border:
+    1px solid
+    #df8869;
+  border-radius: 14px;
+  padding: 10px;
+  margin-bottom: 12px;
+  color: #cc5a30;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* ==================================================
+   TABLAS
+   ================================================== */
+
+.tablewrap {
+  overflow-x: auto;
+  border:
+    1px solid
+    var(--cambridge);
+  border-radius: 14px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  /*
+    Importante para celular:
+    no obligamos a la tabla
+    a medir 480 px.
+  */
+  min-width: 0;
+}
+
+th,
+td {
+  padding: 7px 4px;
+  border-bottom:
+    1px solid
+    #dde7e2;
+  text-align: center;
+  font-size: 12px;
+}
+
+th {
+  background:
+    var(--cambridge);
+  color: #173c3f;
+  font-size: 11px;
+}
+
+th:first-child,
+td:first-child {
+  text-align: center;
+}
+
+tbody tr:nth-child(even) {
+  background: #fbf8f1;
+}
+
+td.position {
+  display: table-cell;
+  text-align: center;
+  padding: 8px 4px;
+}
+
+
+/* ==================================================
+   DETALLE DEL DESAFÍO
+   ================================================== */
+
+.info-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, 1fr);
+  gap: 10px;
+}
+
+.info-box {
+  background: #f3f8f6;
+  border:
+    1px solid
+    var(--cambridge);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+
+.info-label {
+  font-size: 12px;
+  font-weight: bold;
+  color:
+    var(--desafio);
+  margin-bottom: 4px;
+}
+
+.info-value {
+  font-size: 14px;
+}
+
+/* ==================================================
+   PARTICIPANTES / PAREJAS
+   ================================================== */
+
+.participants {
+  display: grid;
+
+  grid-template-columns:
+    1fr;
+
+  gap: 8px;
+}
+
+.participant {
+  background: #f9fcfa;
+
+  border:
+    1px solid
+    var(--cambridge);
+
+  border-radius: 12px;
+
+  padding: 10px 12px;
+}
+
+.participant-number {
+  color:
+    var(--redwood);
+
+  font-weight: bold;
+
+  margin-right: 5px;
+}
+
+
+/* ==================================================
+   PARTIDOS DEL DETALLE
+   ================================================== */
+
+#matches,
+#tieMatches {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 8px;
+}
+
+.match-item {
+  min-width: 0;
+
+  background: #f9fcfa;
+
+  border:
+    1px solid
+    var(--cambridge);
+
+  border-radius: 12px;
+
+  padding: 9px;
+}
+
+#matches .match-number,
+#tieMatches .match-number {
+  text-align: left;
+
+  color:
+    var(--muted);
+
+  font-size: 11px;
+
+  font-weight: bold;
+
+  margin-bottom: 4px;
+}
+
+.match-result {
+  color:
+    var(--desafio);
+
+  font-size: 12px;
+
+  font-weight: bold;
+
+  line-height: 1.3;
+
+  overflow-wrap: anywhere;
+}
+
+.match-type {
+  margin-top: 4px;
+
+  font-size: 10px;
+
+  color:
+    var(--muted);
+}
+
+
+/* ==================================================
+   GANADOR EN DETALLE
+   ================================================== */
+
+.winner-box {
+  background: #fff9e8;
+
+  border:
+    1px solid
+    var(--ecru);
+
+  border-radius: 14px;
+
+  padding: 14px;
+
+  margin-top: 12px;
+
+  text-align: center;
+}
+
+.winner-box strong {
+  display: block;
+
+  color:
+    var(--desafio);
+
+  font-size: 18px;
+
+  margin-top: 4px;
+}
+
+
+/* ==================================================
+   POSICIONES
+   ================================================== */
+
+.position {
+  font-weight: bold;
+  color: var(--desafio);
+}
+
+.positions {
+  margin-top: 12px;
+}
+
+.position {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 9px 0;
+
+  border-bottom:
+    1px solid
+    #e6ece9;
+}
+
+.position:last-child {
+  border-bottom: 0;
+}
+
+.position-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.position-label svg {
+  width: 16px;
+  height: 16px;
+
+  color:
+    var(--redwood);
+}
+
+
+/* ==================================================
+   MINI ESTADÍSTICAS
+   ================================================== */
+
+.stats-mini {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 8px;
+}
+
+.stats-mini > div {
+  text-align: center;
+
+  padding: 10px;
+
+  border:
+    1px solid
+    #dde7e2;
+
+  border-radius: 12px;
+}
+
+.stats-mini strong {
+  display: block;
+
+  font-size: 22px;
+
+  color:
+    var(--caribbean);
+
+  margin: 3px 0;
+}
+
+
+/* ==================================================
+   RESULTADO FINAL
+   ================================================== */
+
+.result-hero {
+  text-align: center;
+  padding: 12px;
+}
+
+.result-hero h2 {
+  font-size: 18px;
+  margin: 4px 0;
+}
+
+.result-icon {
+  width: 24px;
+  height: 24px;
+
+  color:
+    var(--caribbean);
+
+  margin-bottom: 2px;
+}
+
+.winner-name {
+  font-size: 20px;
+
+  font-weight: bold;
+
+  color:
+    var(--desafio);
+
+  margin: 4px 0;
+}
+
+.winner-wins {
+  color:
+    var(--muted);
+
+  font-size: 13px;
+}
+
+.result-hero + .card h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.result-hero + .card + .card h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.section-result-title {
+  text-align: center;
+
+  margin:
+    0 0 10px;
+
+  font-size: 20px;
+}
+
+
+/* ==================================================
+   PODIO
+   ================================================== */
+
+.podium {
+  display: grid;
+  gap: 6px;
+}
+
+.podium-card {
+  border: 1px solid var(--cambridge);
+  border-radius: 14px;
+  padding: 7px 10px;
+  text-align: center;
+  background: #fffefa;
+}
+
+.podium-card.first {
+  padding: 8px 10px;
+  background:
+    linear-gradient(
+      180deg,
+      #fff9e8,
+      #fffdf9
+    );
+  border-color: var(--ecru);
+}
+
+.podium-medal {
+  font-size: 24px;
+  line-height: 1;
+  margin-bottom: 2px;
+  text-align: center;
+}
+
+.podium-rank {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 2px;
+  color: var(--redwood);
+}
+
+.podium-name {
+  font-weight: bold;
+  color: var(--desafio);
+  font-size: 17px;
+  margin-bottom: 2px;
+}
+
+.podium-score {
+  font-size: 11px;
+  line-height: 1.2;
+  color: var(--muted);
+}
+
+.tie-note {
+  margin-top: 10px;
+
+  padding: 10px 12px;
+
+  border-radius: 12px;
+
+  background: #fff8e7;
+
+  color: #6d5a2c;
+
+  font-size: 12px;
+
+  text-align: center;
+}
+
+
+/* ==================================================
+   HISTORIAL
+   ================================================== */
+
+.history-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 8px;
+
+  margin-top: 12px;
+}
+
+.history-grid > div {
+  text-align: center;
+
+  border:
+    1px solid
+    #dde7e2;
+
+  border-radius: 12px;
+
+  padding: 8px;
+}
+
+.history-grid strong {
+  display: block;
+
+  color:
+    var(--caribbean);
+}
+
+
+/* ==================================================
+   OTROS
+   ================================================== */
+
+.toolbar {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.empty {
+  text-align: center;
+}
+
+.empty-icon {
+  width: 38px;
+  height: 38px;
+
+  color:
+    var(--caribbean);
+}
+
+.section-title {
+  text-align: center;
+  margin-top: 0;
+}
+
+
+/* ==================================================
+   LUCIDE
+   ================================================== */
+
+svg.lucide {
+  width: 18px;
+  height: 18px;
+
+  stroke-width: 2;
+
+  vertical-align: middle;
+}
+
+
+/* ==================================================
+   NOMBRES LARGOS
+   ================================================== */
+
+.team h3,
+.active-head h3,
+.history-head h3,
+.podium-name,
+.winner-name,
+td:first-child {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Corregir último resultado */
+.alert-correccion {
+  background: #ffe3dd;
+  color: #cc5a30;
+  border: 1px solid #df8869;
+  border-radius: 14px;
+  padding: 10px 12px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+/* Desempate */
+.alert-desempate {
+  background: #fff1c9;
+  color: #8b6415;
+  border: 1px solid #dcc27f;
+  border-radius: 14px;
+  padding: 10px 12px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+/* ==================================================
+   MÓVIL
+   ================================================== */
+
+@media(max-width:600px) {
+
+  header {
+    padding: 12px 14px;
+  }
+
+  .header-text h1 {
+    font-size: 17px;
+  }
+
+  .header-text small {
+    font-size: 12px;
+  }
+
+  main {
+    padding: 12px 12px 22px;
+  }
+
+  .card {
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 16px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  h3 {
+    font-size: 15px;
+  }
+
+  /* HERO */
+
+  .hero {
+    padding: 18px 16px;
+    border-radius: 18px;
+  }
+
+  .hero h2 {
+    font-size: 22px;
+  }
+
+
+  /* GRIDS */
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+
+  /* HOME */
+
+  .home-grid {
+    display: block;
+  }
+
+  .home-grid .home-action {
+    width: 100%;
+    max-width: 100%;
+  }
+
+
+  /* BOTONES */
+
+  button,
+  a.btn {
+    min-height: 48px;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .actions .btn,
+  .actions button {
+    width: 100%;
+    max-width: 280px;
+    text-align: center;
+  }
+
+
+  /* JUEGOS / HISTORIAL */
+
+  .active-head,
+  .history-head {
+    flex-direction: column;
+
+    align-items:
+      center !important;
+
+    text-align: center;
+  }
+
+  .active-head > div,
+  .history-head > div {
+    text-align:
+      center !important;
+  }
+
+  .badge {
+    align-self: center;
+  }
+
+
+  /* SELECCIÓN DEL GANADOR */
+
+  .winner-options {
+    display: grid;
+    grid-template-columns:
+      1fr 1fr;
+    gap: 10px;
+    margin: 12px 0 16px;
+    padding-bottom: 2px;
+  }
+
+  .winner-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    min-width: 0;
+    min-height: 50px;
+
+    padding: 10px;
+    margin: 0;
+
+    border: 1px solid var(--cambridge);
+    border-radius: 12px;
+    background: #fff;
+
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .winner-option input {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* TABLAS */
+
+  table {
+    width: 100%;
+    min-width: 0;
+  }
+
+  th,
+  td {
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+
+  th {
+    font-size: 11px;
+  }
+
+  /* PARTIDOS */
+
+  #matches,
+  #tieMatches {
+    display: grid;
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(0, 1fr)
+      );
+    gap: 6px;
+  }
+
+  .match-item {
+    padding: 7px;
+    border-radius: 9px;
+  }
+
+  #matches .match-number,
+  #tieMatches .match-number {
+    font-size: 10px;
+    margin-bottom: 2px;
+  }
+
+  .match-result {
+    font-size: 10px;
+    line-height: 1.15;
+  }
+
+
+  /* RESULTADO */
+
+  .result-hero h2 {
+    font-size: 17px;
+    margin: 4px 0;
+  }
+
+  .winner-name {
+    font-size: 19px;
+    margin: 4px 0;
+  }
+
+  .podium-medal {
+    font-size: 28px;
+  }
+
+  .podium-name {
+    font-size: 15px;
+  }
+
+}

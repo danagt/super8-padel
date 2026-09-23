@@ -12,6 +12,12 @@
       --ecru: #dcc27f;
       --sienna: #df8869;
       --redwood: #a44a47;
+
+      --turquesa: #179ca8;
+      --desafio: #cc5a30;
+      --desafio-dark: #b9684f;
+      --desafio-soft: #f8e5dd;
+
       --bg: #f7f4ee;
       --card: #fffdf9;
       --text: #2f3a3c;
@@ -99,8 +105,12 @@
       box-shadow: 0 5px 20px rgba(10, 103, 114, .08)
     }
 
+    .desafios-title {
+      color: var(--desafio);
+    }
+
     .hero {
-      background: linear-gradient(135deg, var(--caribbean), #0d7a83);
+      background: linear-gradient(135deg, #179ca8);
       color: white;
       border-radius: 24px;
       padding: 24px;
@@ -206,7 +216,7 @@
     }
 
     .accent {
-      background: var(--sienna);
+      background: var(--desafio);
       color: white
     }
 
@@ -404,6 +414,25 @@
       background: #fffefa
     }
 
+    .active-super8 {
+      background: #f1f8f6;
+      border: 1px solid rgba(10, 103, 114, .35);
+    }
+
+    .active-desafio {
+      background: #fff3ee;
+      border: 1px solid rgba(204, 90, 48, .38);
+    }
+
+    .active-desafio .history-name {
+      color: var(--desafio);
+    }
+
+    .active-desafio .badge.running {
+      background: #fde7de;
+      color: var(--desafio);
+    }
+
     .history-top {
       display: flex;
       justify-content: space-between;
@@ -417,15 +446,79 @@
       font-size: 17px
     }
 
+    .history-name.super8 {
+      color: var(--caribbean);
+    }
+
+    .history-name.desafios {
+      color: var(--desafio);
+    }
+
     .home-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px
     }
 
+    .super8-card {
+      border-color: rgba(10, 103, 114, .35);
+      box-shadow: 0 5px 20px rgba(10, 103, 114, .08);
+    }
+
+    .desafios-card {
+      border-color: rgba(204, 90, 48, .40);
+      box-shadow: 0 5px 20px rgba(204, 90, 48, .10);
+    }
+
     .home-action {
       text-align: center;
       padding: 18px
+    }
+
+    .home-action.historial {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: 100%;
+      max-width: 390px;
+    }
+
+    .historial-title {
+      color: #b86b62;
+    }
+
+    .historial-card {
+      border-color: rgba(184, 107, 98, .45);
+      box-shadow: 0 5px 20px rgba(184, 107, 98, .10);
+    }
+
+    .historial-btn {
+      background: #b86b62;
+      color: #fff;
+    }
+
+    .active-game-name {
+      font-weight: bold;
+      color: var(--text);
+      margin-top: 4px;
+      margin-bottom: 3px;
+      font-size: 15px;
+    }
+
+    .active-section {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    #activeTournaments {
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    #activeTournamentsCard {
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .note {
@@ -498,6 +591,45 @@
         text-align: center;
       }
     }
+
+
+    /* ===== Ajuste tipográfico móvil general ===== */
+    @media(max-width:600px) {
+      header {
+        padding: 12px 14px;
+      }
+
+      .header-text h1 {
+        font-size: 17px;
+      }
+
+      main {
+        padding: 12px 12px 22px;
+      }
+
+      .card {
+        padding: 12px;
+        margin-bottom: 12px;
+        border-radius: 16px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 20px;
+      }
+
+      .hero {
+        padding: 18px 16px;
+        border-radius: 18px;
+      }
+
+      .hero h2 {
+        font-size: 22px;
+      }
+    }
   </style>
 </head>
 
@@ -508,7 +640,7 @@
 
         <div class="header-title">
           <span class="header-icon">
-            <i data-lucide="circle-dot"></i>
+            <i data-lucide=""></i>
           </span>
 
           <div class="header-text">
@@ -524,36 +656,52 @@
   <main>
     <div class="hero">
       <h2>Super 8 Padel</h2>
-      <p>Organizar torneos individuales o por parejas, cargar resultados y obtener la clasificación y el podio
+      <p>Organizar encuentros individuales o por parejas, cargar resultados y obtener la clasificación y el podio
         automáticamente.</p>
     </div>
+
     <div class="home-grid">
-      <div class="card home-action">
-        <i data-lucide="plus-circle"></i>
-        <h3>Nuevo torneo</h3>
+      <div class="card home-action super8-card">
+        <i data-lucide=""></i>
+        <h3>Super 8</h3>
 
         <p class="muted">Elegir Individual o Por parejas.</p>
         <a class="btn primary" href="modalidad.html">
-          Crear torneo
+          <i data-lucide=""></i>
+          Crear nuevo
         </a>
       </div>
 
-      <div class="card home-action">
-        <i data-lucide="history"></i>
-        <h3>Historial</h3>
-        <p class="muted">Consultar los torneos finalizados.</p>
-        <a class="btn secondary" href="historial.html">
+      <div class="card home-action desafios-card">
+        <i data-lucide=""></i>
+        <h3 class="desafios-title">Desafíos x 3</h3>
+        <p class=" muted">
+          3 parejas · rotación automática.
+        </p>
+        <a class="btn accent" href="desafios/index.html">
+          <i data-lucide=""></i>
+          Crear nuevo
+        </a>
+      </div>
+
+      <div class="card home-action historial historial-card">
+        <i data-lucide=""></i>
+        <h3 class="historial-title">Historial</h3>
+        <p class="muted">Consultar los juegos finalizados.</p>
+        <a class="btn historial-btn" href="historial.html">
           Ver historial
         </a>
       </div>
     </div>
 
-    <!-- TORNEOS EN CURSO -->
 
-    <div id="activeTournamentsCard" class="card" style="display:none"></div>
-    <h2>Torneos en curso</h2>
-    <div id="activeTournaments"></div>
+    <!-- JUEGOS EN CURSO -->
+
+    <div class="active-section" id="juegos-en-curso">
+      <h2>Juegos en curso</h2>
+      <div id="activeTournaments"></div>
     </div>
+
   </main>
 
   <footer>
@@ -569,189 +717,537 @@
     </div>
   </footer>
 
+  <script src="assets/js/lucide.min.js"></script>
 
   <script>
-    function getTournaments() { return JSON.parse(localStorage.getItem('super8_tournaments') || '[]'); }
-    function setTournaments(list) { localStorage.setItem('super8_tournaments', JSON.stringify(list)); }
-    function getCurrentId() { return localStorage.getItem('super8_current_id'); }
-    function setCurrentId(id) { localStorage.setItem('super8_current_id', String(id)); }
-    function getCurrentTournament() {
-      const id = getCurrentId();
-      if (!id) return null;
-      return getTournaments().find(t => String(t.id) === String(id)) || null;
+
+    /* =========================
+       LOCAL STORAGE SEGURO
+       ========================= */
+
+    function safeReadList(key) {
+      try {
+        const raw =
+          localStorage.getItem(key);
+        if (!raw) return [];
+
+        const parsed =
+          JSON.parse(raw);
+        return Array.isArray(parsed)
+          ? parsed
+          : [];
+      } catch (error) {
+        console.error(
+          `No se pudo leer ${key}:`,
+          error
+        );
+        return [];
+      }
     }
-    function saveTournamentObject(t) {
-      const list = getTournaments();
-      const idx = list.findIndex(x => String(x.id) === String(t.id));
-      if (idx >= 0) list[idx] = t; else list.unshift(t);
-      setTournaments(list);
+
+    function safeWriteList(key, list) {
+      try {
+        localStorage.setItem(
+          key,
+          JSON.stringify(list)
+        );
+        return true;
+      } catch (error) {
+        console.error(
+          `No se pudo guardar ${key}:`,
+          error
+        );
+        alert(
+          'No se pudo guardar la información.'
+        );
+        return false;
+      }
     }
+
+    /* =========================
+       SUPER 8
+       ========================= */
+
+    function getTournaments() {
+      return safeReadList(
+        'super8_tournaments'
+      );
+    }
+
+    function setTournaments(list) {
+      safeWriteList(
+        'super8_tournaments',
+        list
+      );
+    }
+
+    function getCurrentId() {
+      return localStorage.getItem(
+        'super8_current_id'
+      );
+    }
+
+    function setCurrentId(id) {
+      localStorage.setItem(
+        'super8_current_id',
+        String(id)
+      );
+    }
+
+    function totalMatches(data) {
+      return data.mode === 'pairs'
+        ? 28
+        : 14;
+    }
+
+    /* =========================
+       DESAFÍOS X 3
+       ========================= */
+
+    function getActiveChallenges() {
+      return safeReadList(
+        'desafiosx3_active'
+      );
+    }
+
+    function setActiveChallenges(list) {
+      safeWriteList(
+        'desafiosx3_active',
+        list
+      );
+    }
+
+    /* =========================
+       UTILIDADES
+       ========================= */
+
     function formatDate(v) {
       if (!v) return '';
       const p = v.split('-');
-      return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : v;
+      return p.length === 3
+        ? `${p[2]}/${p[1]}/${p[0]}`
+        : v;
     }
 
-    const individualFixture = [
-      [[1, 2, 3, 4], [5, 6, 7, 8]],
-      [[1, 3, 5, 7], [2, 4, 6, 8]],
-      [[2, 3, 6, 7], [1, 4, 5, 8]],
-      [[1, 5, 2, 6], [3, 7, 4, 8]],
-      [[2, 5, 4, 7], [1, 6, 3, 8]],
-      [[2, 8, 3, 5], [1, 7, 4, 6]],
-      [[3, 6, 4, 5], [1, 8, 2, 7]]
-    ];
-
-    const pairsFixture = [
-      [[1, 8], [2, 7], [3, 6], [4, 5]],
-      [[1, 7], [8, 6], [2, 5], [3, 4]],
-      [[1, 6], [7, 5], [8, 4], [2, 3]],
-      [[1, 5], [6, 4], [7, 3], [8, 2]],
-      [[1, 4], [5, 3], [6, 2], [7, 8]],
-      [[1, 3], [4, 2], [5, 8], [6, 7]],
-      [[1, 2], [3, 8], [4, 7], [5, 6]]
-    ];
-
-    function getFixture(data) { return data.mode === 'pairs' ? pairsFixture : individualFixture; }
-    function totalMatches(data) { return data.mode === 'pairs' ? 28 : 14; }
-    function entityCount(data) { return 8; }
-    function entityLabel(data) { return data.mode === 'pairs' ? 'Pareja' : 'Participante'; }
-    function displayEntity(data, id) {
-      if (data.mode === 'pairs') {
-        const p = data.pairs[id - 1];
-        return `${p.member1} / ${p.member2}`;
-      }
-      return data.players[id - 1];
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
     }
 
-    function openTournament(id, page) {
-      setCurrentId(id);
-      location.href = page;
-    }
+    /* =========================
+       OBTENER TODOS LOS JUEGOS
+       EN CURSO
+       ========================= */
 
-    function deleteTournament(id) {
+    function getActiveGames() {
+      const tournaments =
+        getTournaments();
 
-      const t = getTournaments()
-        .find(x => String(x.id) === String(id));
+      /* Corregir automáticamente
+         estado de Super 8 */
 
-      if (!t) return;
-
-      const ok = confirm(
-        `¿Querés eliminar definitivamente "${t.name}"?`
-      );
-
-      if (!ok) return;
-
-      const list = getTournaments()
-        .filter(x => String(x.id) !== String(id));
-
-      setTournaments(list);
-
-      if (String(getCurrentId()) === String(id)) {
-        localStorage.removeItem('super8_current_id');
-      }
-
-      renderActiveTournaments();
-    }
-
-    function renderActiveTournaments() {
-
-      const tournaments = getTournaments();
-
-      // Actualizar automáticamente el estado de cada torneo
       tournaments.forEach(t => {
-        const validCount = Object.values(t.results || {})
-          .filter(x => x.valid).length;
+        const validCount =
+          Object.values(
+            t.results || {}
+          )
+            .filter(
+              x => x.valid
+            )
+            .length;
 
-        if (validCount === totalMatches(t)) {
-          t.status = 'Finalizado';
+        if (
+          validCount ===
+          totalMatches(t)
+        ) {
+          t.status =
+            'Finalizado';
         } else {
-          t.status = 'En curso';
+          t.status =
+            'En curso';
         }
       });
 
-      // Guardar los estados corregidos
-      setTournaments(tournaments);
+      setTournaments(
+        tournaments
+      );
 
-      // Mostrar solamente los torneos en curso
-      const active = tournaments
-        .filter(t => t.status === 'En curso');
+      const super8 = tournaments
+        .filter(
+          t =>
+            t.status ===
+            'En curso'
+        )
+        .map(t => ({
+          ...t,
+          gameType: 'super8'
+        }));
 
-      const card = document.getElementById('activeTournamentsCard');
-      const box = document.getElementById('activeTournaments');
+      /*
+        Los elementos que están
+        en desafiosx3_active todavía
+        están activos.
+  
+        También puede existir el estado
+        "Desempate", por eso no filtramos
+        solamente por "En curso".
+      */
 
-      if (active.length === 0) {
-        card.style.display = 'block';
-        box.innerHTML = '<p class="error">No hay torneos en juego</p>';
+      const desafios =
+        getActiveChallenges()
+          .map(d => ({
+            ...d,
+            gameType:
+              'desafiosx3'
+          }));
+
+      return [
+        ...super8,
+        ...desafios
+      ]
+        .sort((a, b) => {
+          const dateA =
+            a.createdAt ||
+            a.date ||
+            '';
+
+          const dateB =
+            b.createdAt ||
+            b.date ||
+            '';
+
+          return String(dateB)
+            .localeCompare(
+              String(dateA)
+            );
+        });
+    }
+
+    /* =========================
+       ABRIR JUEGO
+       ========================= */
+
+    function openActiveGame(
+      type,
+      id,
+      page = ''
+    ) {
+
+      /* SUPER 8 */
+
+      if (
+        type === 'super8'
+      ) {
+        setCurrentId(id);
+        location.href =
+          page;
         return;
       }
 
-      card.style.display = 'block';
+      /* DESAFÍOS X 3 */
 
-      box.innerHTML = active.map(t => {
+      localStorage.setItem(
+        'desafiosx3_selected_id',
+        String(id)
+      );
 
-        const loaded = Object.values(t.results || {})
-          .filter(x => x.valid).length;
+      location.href =
+        'desafios/partido.html';
+    }
 
-        return `
-      <div class="history-item">
+    /* =========================
+       ELIMINAR JUEGO
+       ========================= */
 
-        <div class="history-top">
+    function deleteActiveGame(
+      type,
+      id
+    ) {
 
-          <div>
-            <div class="history-name">${t.name}</div>
+      /* SUPER 8 */
 
-            <div class="muted">
-              ${t.mode === 'pairs' ? 'Por parejas' : 'Individual'}
-              · ${formatDate(t.date)}
-              · ${t.target} puntos
-              · ${loaded}/${totalMatches(t)} partidos
+      if (
+        type === 'super8'
+      ) {
+        const tournaments =
+          getTournaments();
+        const game =
+          tournaments.find(
+            x =>
+              String(x.id) ===
+              String(id)
+          );
+
+        if (!game)
+          return;
+
+        if (
+          !confirm(
+            `¿Querés eliminar definitivamente "${game.name}"?`
+          )
+        )
+          return;
+
+        const updated =
+          tournaments.filter(
+            x =>
+              String(x.id) !==
+              String(id)
+          );
+
+        setTournaments(
+          updated
+        );
+
+        if (
+          String(
+            getCurrentId()
+          ) ===
+          String(id)
+        ) {
+
+          localStorage.removeItem(
+            'super8_current_id'
+          );
+        }
+
+        renderActiveGames();
+        return;
+      }
+
+      /* DESAFÍOS X 3 */
+
+      const challenges =
+        getActiveChallenges();
+
+      const challenge =
+        challenges.find(
+          x =>
+            String(x.id) ===
+            String(id)
+        );
+
+      if (!challenge)
+        return;
+
+      if (
+        !confirm(
+          `¿Querés eliminar definitivamente "${challenge.name}"?`
+        )
+      )
+        return;
+
+      const updated =
+        challenges.filter(
+          x =>
+            String(x.id) !==
+            String(id)
+        );
+
+      setActiveChallenges(
+        updated
+      );
+
+      if (
+        String(
+          localStorage.getItem(
+            'desafiosx3_selected_id'
+          )
+        ) ===
+        String(id)
+      ) {
+        localStorage.removeItem(
+          'desafiosx3_selected_id'
+        );
+      }
+      renderActiveGames();
+    }
+
+    /* =========================
+       MOSTRAR JUEGOS EN CURSO
+       ========================= */
+
+    function renderActiveGames() {
+      const active =
+        getActiveGames();
+
+      const box =
+        document.getElementById(
+          'activeTournaments'
+        );
+
+      if (!active.length) {
+        box.innerHTML = `
+        <p class="error">
+          Actualmente no hay juegos
+        </p>
+      `;
+        return;
+      }
+
+      box.innerHTML =
+        active.map(item => {
+
+          /* =====================
+             SUPER 8
+             ===================== */
+
+          if (
+            item.gameType ===
+            'super8'
+          ) {
+            const loaded =
+              Object.values(
+                item.results || {}
+              )
+                .filter(
+                  x => x.valid
+                )
+                .length;
+
+            return `
+              <div class="history-item active-super8">
+                <div class="history-top">
+                  <div>
+                    <div class="history-name super8">
+                      Super 8
+                      <span class="badge running">
+                        ${item.mode === 'pairs' ? 'Por parejas' : 'Individual'}
+                      </span>
+                    </div>
+                    
+                    <div class="active-game-name">
+                      ${escapeHtml(item.name)}
+                    </div>
+
+                    <div class="muted">
+                      ${formatDate(item.date)}
+                    </div>
+                  </div>
+
+                  <span class="badge running">
+                    En curso
+                  </span>
+                </div>
+
+              <div class="actions">
+                <button
+                  class="primary"
+                  type="button"
+                  onclick="
+                    openActiveGame(
+                      'super8',
+                      '${item.id}',
+                      'rondas.html'
+                    )
+                  "
+                >
+                  <i
+                    data-lucide=""
+                  ></i>
+                  Continuar juego
+                </button>
+
+                <button
+                  class="danger"
+                  type="button"
+                  onclick="
+                    deleteActiveGame(
+                      'super8',
+                      '${item.id}'
+                    )
+                  "
+                >
+                  <i
+                    data-lucide=""
+                  ></i>
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          `;
+          }
+
+          /* =====================
+             DESAFÍOS X 3
+             ===================== */
+
+          const status =
+            item.status ===
+              'Desempate'
+              ? 'Desempate'
+              : 'En curso';
+
+          return `
+              <div class="history-item active-desafio">
+                <div class="history-top">
+                  <div>
+                    <div class="history-name desafios">
+                      Desafíos x 3
+                    </div>
+
+                    <div class="active-game-name">
+                      ${escapeHtml(item.name)}
+                    </div>
+
+                    <div class="muted">
+                      ${formatDate(item.date)}
+                    </div>
+
+                  </div>
+                  <span class="badge running">
+                    ${status}
+                  </span>
+                </div>
+
+            <div class="actions">
+              <button
+                class="accent"
+                type="button"
+                onclick="
+                  openActiveGame(
+                    'desafiosx3',
+                    '${item.id}'
+                  )
+                "
+              >
+                <i
+                  data-lucide=""
+                ></i>
+                Continuar juego
+              </button>
+
+              <button
+                class="danger"
+                type="button"
+                onclick="
+                  deleteActiveGame(
+                    'desafiosx3',
+                    '${item.id}'
+                  )
+                "
+              >
+                <i
+                  data-lucide=""
+                ></i>
+                Eliminar
+              </button>
             </div>
           </div>
+        `;
+        }).join('');
 
-          <span class="badge running">
-            En curso
-          </span>
-
-        </div>
-
-        <div class="actions">
-
-          <button
-            class="accent"
-            onclick="openTournament('${t.id}', 'rondas.html')">
-            <i data-lucide="play"></i>
-            Continuar torneo
-          </button>
-
-          <button
-            class="secondary"
-            onclick="openTournament('${t.id}', 'resultados.html')">
-            <i data-lucide="chart-no-axes-column"></i>
-            Ver clasificación
-          </button>
-
-          <button
-            class="danger"
-            onclick="deleteTournament('${t.id}')">
-            <i data-lucide="trash-2"></i>
-            Eliminar
-          </button>
-
-        </div>
-      </div>
-    `;
-      }).join('');
       lucide.createIcons();
     }
 
-    renderActiveTournaments();
+    renderActiveGames();
 
-  </script>
-
-  <script src="assets/js/lucide.min.js"></script>
-  <script>
     lucide.createIcons();
+
   </script>
 
 </body>

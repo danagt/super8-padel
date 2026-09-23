@@ -1,0 +1,1359 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#cc5a30">
+
+  <title>Desafíos x 3 - Partido</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="header-row">
+      <div class="header-title">
+        <i data-lucide=""></i>
+        <div class="header-text">
+          <h1>Desafíos x 3</h1>
+          <small id="headerSubtitle">
+            Partido en curso
+          </small>
+        </div>
+      </div>
+      <a
+        class="btn ghost"
+        href="../inicio.html#juegos-en-curso"
+      >
+        <i data-lucide="house"></i>
+        Inicio
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ÚLTIMO RESULTADO -->
+
+  <div
+    id="lastResult"
+    class="last-result"
+  ></div>
+
+  <!-- AVISO DE DESEMPATE -->
+
+  <div
+    id="phaseBox"
+    class="phase-box alert-desempate"
+    style="display:none"
+  ></div>
+
+  <!-- PARTIDO ACTUAL -->
+
+  <section class="card">
+    <div
+      id="matchNumber"
+      class="match-number"
+    ></div>
+    <div class="court-title">
+    </div>
+
+    <div class="match-grid">
+      <div class="team">
+        <h3 id="teamAName"></h3>
+        <div
+         id="teamAStreak"
+          class="streak"
+        ></div>
+      </div>
+
+      <div class="vs">
+        VS
+      </div>
+      <div class="team">
+        <h3 id="teamBName"></h3>
+        <div
+         id="teamBStreak"
+          class="streak"
+        ></div>
+      </div>
+    </div>
+
+    <!-- PAREJA EN ESPERA -->
+
+    <div
+      id="waitingBox"
+      class="waiting"
+    >
+      <div class="waiting-line">
+        <i data-lucide="clock-3"></i>
+        EN ESPERA
+      </div>
+      <strong id="waitingName"></strong>
+    </div>
+
+    <!-- ELEGIR GANADOR -->
+
+    <div class="results-title">
+      ¿QUIÉN GANÓ?
+    </div>
+    <div class="winner-options">
+      <label class="winner-option">
+        <input
+          type="radio"
+          name="winner"
+          value="A"
+          onchange="selectWinner('A')"
+        >
+        <span id="resultAName"></span>
+      </label>
+      <label class="winner-option">
+        <input
+          type="radio"
+          name="winner"
+          value="B"
+          onchange="selectWinner('B')"
+        >
+        <span id="resultBName"></span>
+      </label>
+    </div>
+
+    <button
+      id="confirmWinnerBtn"
+      class="primary confirm-winner-btn"
+      type="button"
+      onclick="confirmWinner()"
+      disabled
+    >
+      Confirmar resultado
+    </button>
+
+    <button
+      id="undoResultBtn"
+      type="button"
+      onclick="undoLastResult()"
+      style="
+        display:none;
+        width:100%;
+        margin-top:10px;
+        padding:12px;
+        border:1px solid #df8869;
+        border-radius:12px;
+        background:#ffe3dd;
+        color:#cc5a30;
+        font-weight:bold;
+        cursor:pointer;
+      "
+    >
+      Corregir último resultado
+    </button>
+  </section>
+
+  <!-- TABLA -->
+  <section class="card">
+    <h2
+      style="
+        text-align:center;
+        margin-top:0
+      "
+    >
+      Tabla del desafío
+    </h2>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Pareja</th>
+            <th>PJ</th>
+            <th>PG</th>
+            <th>PP</th>
+          </tr>
+        </thead>
+        <tbody id="statsTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FINALIZAR -->
+
+  <section
+    id="finishSection"
+    class="card"
+  >
+    <h2
+      style="
+        text-align:center;
+        margin-top:0
+      "
+    >
+      Fin del desafío
+    </h2>
+
+    <p
+      class="muted"
+      style="text-align:center"
+    >
+      La duración es orientativa.
+      Finalizá cuando haya terminado
+      el tiempo de juego.
+    </p>
+
+    <div class="actions">
+      <button
+        class="danger-btn"
+        type="button"
+        onclick="finishChallenge()"
+      >
+        <i data-lucide=""></i>
+        Finalizar desafío
+      </button>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    © 2026 Dana Grecco
+  </div>
+</footer>
+
+<script src="../assets/js/lucide.min.js"></script>
+
+<script>
+
+/* =========================
+   LOCAL STORAGE
+   ========================= */
+
+function safeReadList(key) {
+  try {
+    const raw =
+     localStorage.getItem(key);
+    if (!raw) {
+      return [];
+    }
+    const parsed =
+      JSON.parse(raw);
+    return Array.isArray(parsed)
+      ? parsed
+      : [];
+  } catch (error) {
+    console.error(
+      `No se pudo leer ${key}:`,
+      error
+    );
+    return [];
+  }
+}
+
+function safeWriteList(
+  key,
+  value
+) {
+  try {
+    localStorage.setItem(
+      key,
+      JSON.stringify(value)
+    );
+    return true;
+  } catch (error) {
+    console.error(
+      `No se pudo guardar ${key}:`,
+      error
+    );
+    alert(
+      'No se pudo guardar la información en este dispositivo.'
+    );
+    return false;
+  }
+}
+
+/* =========================
+   DESAFÍO ACTUAL
+   ========================= */
+
+let resultLocked =
+  false;
+let selectedWinner =
+  null;
+
+const selectedId =
+  Number(
+    localStorage.getItem(
+      'desafiosx3_selected_id'
+    )
+  );
+
+let activeChallenges =
+  safeReadList(
+    'desafiosx3_active'
+  );
+
+let challenge =
+  activeChallenges.find(
+    x =>
+      Number(x.id) ===
+      selectedId
+  ) || null;
+
+if (!challenge) {
+  location.href =
+    'index.html';
+}
+
+/* =========================
+   UTILIDADES
+   ========================= */
+
+function getPair(id) {
+  return challenge.pairs.find(
+    p =>
+      p.id === id
+  );
+}
+
+function saveChallenge() {
+  const list =
+    safeReadList(
+      'desafiosx3_active'
+    );
+
+  const index =
+    list.findIndex(
+      x =>
+        Number(x.id) ===
+        Number(challenge.id)
+    );
+
+  if (index >= 0) {
+    list[index] =
+      challenge;
+  } else {
+    list.unshift(
+      challenge
+    );
+  }
+
+  safeWriteList(
+    'desafiosx3_active',
+    list
+  );
+}
+
+/* =========================
+   PARTIDOS CONSECUTIVOS
+   ========================= */
+
+function renderStreak(
+  id,
+  count
+) {
+  const element =
+    document.getElementById(id);
+
+  if (
+    challenge.phase !==
+    'normal'
+  ) {
+    element.textContent =
+      '';
+    element.className =
+      'streak';
+    return;
+  }
+
+  if (count >= 2) {
+    element.textContent =
+      'Segundo partido consecutivo · debe salir después';
+    element.className =
+      'streak warning';
+  } else {
+    element.textContent =
+      'Primer partido consecutivo';
+    element.className =
+      'streak';
+  }
+}
+
+/* =========================
+   ELEGIR GANADOR
+   ========================= */
+
+function selectWinner(side) {
+  if (resultLocked) {
+    return;
+  }
+  selectedWinner =
+    side;
+
+  document.getElementById(
+    'confirmWinnerBtn'
+  ).disabled =
+    false;
+}
+
+function resetWinnerSelection() {
+  selectedWinner =
+    null;
+  document
+    .querySelectorAll(
+      'input[name="winner"]'
+    )
+    .forEach(
+      radio => {
+        radio.checked =
+          false;
+      }
+    );
+
+  const button =
+    document.getElementById(
+      'confirmWinnerBtn'
+    );
+
+  if (button) {
+    button.disabled =
+      true;
+  }
+}
+
+function setWinnerControlsDisabled(
+  disabled
+) {
+  document
+    .querySelectorAll(
+      'input[name="winner"]'
+    )
+    .forEach(
+      radio => {
+        radio.disabled =
+          disabled;
+      }
+    );
+
+  document.getElementById(
+    'confirmWinnerBtn'
+  ).disabled =
+    disabled ||
+    !selectedWinner;
+}
+
+function confirmWinner() {
+  if (
+    !selectedWinner ||
+    resultLocked
+  ) {
+    return;
+ }
+
+  saveResult(
+    selectedWinner
+  );
+}
+
+/* =========================
+   TABLA
+   ========================= */
+
+function renderStats() {
+  const ordered =
+    [...challenge.pairs]
+      .sort(
+        (a, b) =>
+          b.won - a.won ||
+          a.lost - b.lost ||
+          a.name.localeCompare(
+            b.name,
+            'es'
+          )
+      );
+
+  document.getElementById(
+    'statsTable'
+  ).innerHTML =
+    ordered.map(
+      p => `
+        <tr>
+          <td>
+            ${p.name}
+          </td>
+          <td>
+            ${p.played}
+          </td>
+          <td>
+            <strong>
+              ${p.won}
+            </strong>
+          </td>
+          <td>
+            ${p.lost}
+          </td>
+        </tr>
+      `
+    ).join('');
+}
+
+/* =========================
+   RENDER PRINCIPAL
+   ========================= */
+
+function render() {
+  const match =
+    challenge.currentMatch;
+
+  const pairA =
+    getPair(
+      match.pairA
+    );
+
+  const pairB =
+    getPair(
+      match.pairB
+    );
+
+  const waiting =
+    match.waiting
+      ? getPair(
+          match.waiting
+        )
+      : null;
+
+  /* NÚMERO DE PARTIDO */
+
+  document.getElementById(
+    'matchNumber'
+  ).textContent =
+    challenge.phase ===
+    'normal'
+      ? `Partido ${match.number}`
+      : challenge.phase ===
+       'tiebreak2'
+        ? 'Partido de desempate'
+        :
+          `Desempate · mini ronda ${challenge.tie3.round} · partido ${challenge.tie3.step}`;
+
+  /* NOMBRES EN CANCHA */
+
+  document.getElementById(
+    'teamAName'
+  ).textContent =
+    pairA.name;
+
+  document.getElementById(
+    'teamBName'
+  ).textContent =
+    pairB.name;
+
+  /* NOMBRES PARA ELEGIR GANADOR */
+
+  document.getElementById(
+    'resultAName'
+  ).textContent =
+    pairA.name;
+
+  document.getElementById(
+    'resultBName'
+  ).textContent =
+    pairB.name;
+
+  /* PAREJA EN ESPERA */
+
+  if (waiting) {
+    document.getElementById(
+      'waitingBox'
+    ).style.display =
+      'block';
+
+    document.getElementById(
+      'waitingName'
+    ).textContent =
+      waiting.name;
+  } else {
+    document.getElementById(
+      'waitingBox'
+    ).style.display =
+      'none';
+  }
+
+  /* PARTIDOS CONSECUTIVOS */
+
+  renderStreak(
+    'teamAStreak',
+    challenge.streaks?.[
+      pairA.id
+    ] || 1
+  );
+
+  renderStreak(
+    'teamBStreak',
+    challenge.streaks?.[
+      pairB.id
+    ] || 1
+  );
+
+  /* FASE NORMAL O DESEMPATE */
+
+  const phaseBox =
+    document.getElementById(
+      'phaseBox'
+    );
+  if (
+    challenge.phase ===
+    'normal'
+  ) {
+    phaseBox.style.display =
+      'none';
+    document.getElementById(
+      'headerSubtitle'
+    ).textContent =
+      'Partido en curso';
+
+    document.getElementById(
+      'finishSection'
+    ).style.display =
+      'block';
+  } else {
+    phaseBox.style.display =
+      'block';
+    phaseBox.textContent =
+      challenge.phase ===
+      'tiebreak2'
+        ? 'Desempate final: este partido define a la pareja ganadora del desafío.'
+        : 'Triple empate: una pareja debe ganar los dos partidos de una mini ronda para ser campeona.';
+
+    document.getElementById(
+      'headerSubtitle'
+    ).textContent =
+      'Desempate';
+
+    document.getElementById(
+      'finishSection'
+    ).style.display =
+      'none';
+  }
+
+  resetWinnerSelection();
+    renderStats();
+    const undoBtn =
+      document.getElementById(
+        'undoResultBtn'
+      );
+    if (undoBtn) {
+      const hasUndo =
+        localStorage.getItem(
+          `desafiosx3_undo_${challenge.id}`
+        );
+      undoBtn.style.display =
+        hasUndo
+          ? 'block'
+          : 'none';
+    }
+    lucide.createIcons();
+}
+
+/* =========================
+   MENSAJES
+   ========================= */
+
+function showLastResult(text) {
+  const box =
+    document.getElementById(
+      'lastResult'
+    );
+  box.textContent =
+    text;
+  box.style.display =
+    'block';
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+
+function clearLastResult() {
+  const box =
+    document.getElementById(
+      'lastResult'
+    );
+
+  box.textContent =
+    '';
+  box.style.display =
+    'none';
+}
+
+/* =========================
+   RESULTADO NORMAL
+   ========================= */
+
+function saveNormalResult(side) {
+  const match =
+    challenge.currentMatch;
+
+  const pairA =
+    getPair(
+      match.pairA
+    );
+
+  const pairB =
+    getPair(
+      match.pairB
+    );
+
+  const waiting =
+    getPair(
+      match.waiting
+    );
+
+  const winner =
+    side === 'A'
+      ? pairA
+      : pairB;
+
+  const loser =
+    side === 'A'
+      ? pairB
+      : pairA;
+
+  /* ESTADÍSTICAS */
+
+  pairA.played++;
+  pairB.played++;
+  winner.won++;
+  loser.lost++;
+
+  /* GUARDAR PARTIDO */
+
+  challenge.matches.push({
+    number:
+      match.number,
+    pairA:
+      pairA.id,
+    pairB:
+      pairB.id,
+    winner:
+      winner.id,
+    loser:
+      loser.id,
+    type:
+      'normal',
+    playedAt:
+      new Date().toISOString()
+  });
+
+  /* ROTACIÓN */
+
+  const winnerStreak =
+    challenge.streaks?.[
+      winner.id
+    ] || 1;
+
+  const newStreaks = {
+    1: 0,
+    2: 0,
+    3: 0
+  };
+
+  /*
+    Si ganó su segundo partido
+    consecutivo, debe salir.
+  */
+
+  if (
+    winnerStreak >= 2
+  ) {
+    challenge.currentMatch = {
+      number:
+        match.number + 1,
+      pairA:
+        loser.id,
+      pairB:
+        waiting.id,
+      waiting:
+        winner.id
+    };
+
+    newStreaks[
+      loser.id
+    ] =
+      (
+        challenge.streaks?.[
+          loser.id
+        ] || 1
+      ) + 1;
+
+    newStreaks[
+      waiting.id
+    ] =
+      1;
+
+    showLastResult(
+      `${winner.name} ganó, pero sale porque completó dos partidos consecutivos.`
+    );
+  } else {
+   /*
+      Si todavía no jugó dos
+      consecutivos, continúa.
+    */
+    challenge.currentMatch = {
+      number:
+        match.number + 1,
+      pairA:
+        winner.id,
+      pairB:
+        waiting.id,
+      waiting:
+        loser.id
+    };
+
+    newStreaks[
+      winner.id
+    ] =
+      winnerStreak + 1;
+
+    newStreaks[
+      waiting.id
+    ] =
+      1;
+
+    showLastResult(
+      `${winner.name} ganó y continúa en cancha.`
+    );
+  }
+
+  challenge.streaks =
+    newStreaks;
+  saveChallenge();
+  render();
+}
+
+/* =========================
+   RESULTADO DE DESEMPATE
+   ========================= */
+
+function saveTieBreakResult(side) {
+  const match =
+    challenge.currentMatch;
+  const pairA =
+    getPair(
+      match.pairA
+    );
+  const pairB =
+    getPair(
+      match.pairB
+    );
+  const winner =
+    side === 'A'
+      ? pairA
+      : pairB;
+  const loser =
+    side === 'A'
+      ? pairB
+      : pairA;
+
+  /* GUARDAR DESEMPATE */
+
+  challenge.tieBreakMatches =
+    challenge.tieBreakMatches || [];
+  challenge.tieBreakMatches.push({
+    number:
+      challenge
+        .tieBreakMatches
+        .length + 1,
+    pairA:
+      pairA.id,
+    pairB:
+      pairB.id,
+    winner:
+      winner.id,
+    loser:
+      loser.id,
+    type:
+      'desempate',
+    playedAt:
+      new Date().toISOString()
+  });
+
+  /* =========================
+     EMPATE ENTRE DOS
+     ========================= */
+
+  if (
+    challenge.phase ===
+    'tiebreak2'
+  ) {
+    challenge.winnerId =
+      winner.id;
+    challenge.resultType =
+      'winner';
+    challenge.status =
+      'Finalizado';
+    challenge.finishedAt =
+      new Date().toISOString();
+    finalizeToHistory();
+    return;
+  }
+
+  /* =========================
+     TRIPLE EMPATE
+     ========================= */
+  if (
+    challenge.phase ===
+    'tiebreak3'
+  ) {
+    /*
+      PRIMER PARTIDO
+      DE LA MINI RONDA
+    */
+    if (
+      challenge.tie3.step === 1
+    ) {
+      challenge.tie3.firstWinner =
+        winner.id;
+      challenge.tie3.firstLoser =
+       loser.id;
+      challenge.tie3.step =
+        2;
+      challenge.currentMatch = {
+        number:
+          match.number + 1,
+        pairA:
+          winner.id,
+        pairB:
+          challenge.tie3.waiting,
+        waiting:
+          loser.id
+     };
+
+      showLastResult(
+        `${winner.name} ganó el primer partido de la mini ronda. Ahora debe volver a ganar para ser campeona.`
+      );
+
+      saveChallenge();
+      render();
+      return;
+   }
+
+    /*
+      SEGUNDO PARTIDO
+      DE LA MINI RONDA
+    */
+
+    if (
+      winner.id ===
+      challenge.tie3.firstWinner
+    ) {
+      challenge.winnerId =
+        winner.id;
+      challenge.resultType =
+        'winner';
+      challenge.status =
+        'Finalizado';
+      challenge.finishedAt =
+        new Date().toISOString();
+      challenge.finalTieOrder = [
+        winner.id,
+        loser.id,
+        challenge
+          .tie3
+          .firstLoser
+      ];
+
+      finalizeToHistory();
+      return;
+    }
+
+    /*
+      Nadie ganó los dos partidos:
+      comienza otra mini ronda.
+    */
+
+    const nextOrder = [
+      winner.id,
+      challenge.tie3.firstLoser,
+      challenge.tie3.firstWinner
+    ];
+
+    challenge.tie3 = {
+      round:
+        challenge.tie3.round + 1,
+      step:
+       1,
+      order:
+        nextOrder,
+      waiting:
+        nextOrder[2],
+      firstWinner:
+        null,
+      firstLoser:
+        null
+    };
+
+    challenge.currentMatch = {
+      number:
+        match.number + 1,
+      pairA:
+        nextOrder[0],
+      pairB:
+        nextOrder[1],
+      waiting:
+        nextOrder[2]
+    };
+
+    showLastResult(
+      'La mini ronda no tuvo una ganadora de dos partidos consecutivos. Se inicia una nueva mini ronda.'
+    );
+
+    saveChallenge();
+    render();
+  }
+}
+
+/* =========================
+   GUARDAR RESULTADO
+   ========================= */
+
+function saveResult(side) {
+  if (resultLocked) {
+    return;
+  }
+  resultLocked = true;
+  setWinnerControlsDisabled(
+    true
+  );
+  localStorage.setItem(
+    `desafiosx3_undo_${challenge.id}`,
+    JSON.stringify(challenge)
+  );
+  try {
+    if (
+      challenge.phase ===
+      'normal'
+    ) {
+      saveNormalResult(
+        side
+      );
+    } else {
+      saveTieBreakResult(
+        side
+      );
+    }
+  } catch (error) {
+    console.error(
+      'Error al guardar el resultado:',
+      error
+    );
+    alert(
+      'No se pudo guardar el resultado. Intentá nuevamente.'
+    );
+  } finally {
+    setTimeout(
+      () => {
+        resultLocked =
+          false;
+        setWinnerControlsDisabled(
+          false
+        );
+      },
+      350
+    );
+  }
+}
+
+function undoLastResult() {
+  const key =
+    `desafiosx3_undo_${challenge.id}`;
+  const saved =
+    localStorage.getItem(key);
+  if (!saved) {
+    return;
+  }
+  if (
+    !confirm(
+      '¿Querés corregir el último resultado cargado?'
+    )
+  ) {
+    return;
+  }
+  try {
+    challenge =
+      JSON.parse(saved);
+    localStorage.removeItem(
+      key
+    );
+    saveChallenge();
+    clearLastResult();
+    render();
+  } catch (error) {
+    console.error(
+      'No se pudo restaurar el resultado:',
+      error
+    );
+    alert(
+      'No se pudo corregir el último resultado.'
+    );
+  }
+}
+
+/* =========================
+   FINALIZAR DESAFÍO
+   ========================= */
+
+function finishChallenge() {
+  if (
+    !challenge.matches.length
+  ) {
+
+    alert(
+      'Todavía no se jugó ningún partido.'
+    );
+
+    return;
+  }
+
+
+  if (
+    !confirm(
+      '¿Finalizar el tiempo de juego y calcular el resultado del desafío?'
+    )
+  ) {
+
+    return;
+  }
+
+
+  const maxWins =
+    Math.max(
+      ...challenge.pairs.map(
+        p => p.won
+      )
+    );
+
+
+  const leaders =
+    challenge.pairs.filter(
+      p =>
+        p.won ===
+        maxWins
+    );
+
+
+  /* GANADORA ÚNICA */
+
+  if (
+    leaders.length === 1
+  ) {
+
+    challenge.winnerId =
+      leaders[0].id;
+
+
+    challenge.resultType =
+      'winner';
+
+    challenge.status =
+      'Finalizado';
+    challenge.finishedAt =
+      new Date().toISOString();
+    finalizeToHistory();
+    return;
+  }
+
+  /* =========================
+     EMPATE ENTRE DOS
+     ========================= */
+
+  if (
+    leaders.length === 2
+  ) {
+
+    clearLastResult();
+
+    const third =
+      challenge.pairs.find(
+        p =>
+          !leaders.some(
+            leader =>
+              leader.id === p.id
+          )
+      );
+
+      alert(
+        `${leaders[0].name.replaceAll(' / ', '/')} y ${leaders[1].name.replaceAll(' / ', '/')} han empatado y deben jugar un desempate.`
+    );
+    
+    challenge.phase =
+      'tiebreak2';
+
+    challenge.status =
+      'Desempate';
+
+    challenge.tiePairIds =
+      leaders.map(
+        p => p.id
+      );
+
+    challenge.currentMatch = {
+      number:
+        challenge
+          .currentMatch
+          .number,
+      pairA:
+        leaders[0].id,
+      pairB:
+        leaders[1].id,
+      waiting:
+        third.id
+    };
+
+    challenge.streaks = {
+      1: 0,
+      2: 0,
+      3: 0
+    };
+
+    saveChallenge();
+    render();
+    return;
+  }
+
+  /* =========================
+     TRIPLE EMPATE
+     ========================= */
+
+  clearLastResult();
+
+  const order =
+    leaders.map(
+      p => p.id
+    );
+
+  challenge.phase =
+    'tiebreak3';
+
+  challenge.status =
+    'Desempate';
+
+  challenge.tiePairIds =
+    order;
+
+  challenge.tie3 = {
+    round:
+      1,
+    step:
+      1,
+    order:
+      order,
+    waiting:
+      order[2],
+    firstWinner:
+      null,
+    firstLoser:
+      null
+  };
+
+  challenge.currentMatch = {
+    number:
+      challenge
+        .currentMatch
+        .number,
+    pairA:
+      order[0],
+    pairB:
+      order[1],
+    waiting:
+      order[2]
+  };
+
+  challenge.streaks = {
+    1: 0,
+    2: 0,
+    3: 0
+  };
+
+  saveChallenge();
+  render();
+}
+
+/* =========================
+   FINALIZAR Y GUARDAR
+   EN HISTORIAL
+   ========================= */
+
+function finalizeToHistory() {
+  const history =
+    safeReadList(
+      'desafiosx3_history'
+    );
+  const snapshot =
+    JSON.parse(
+      JSON.stringify(
+        challenge
+      )
+    );
+  const index =
+    history.findIndex(
+      x =>
+        Number(x.id) ===
+        Number(snapshot.id)
+    );
+
+  if (index >= 0) {
+    history[index] =
+      snapshot;
+  } else {
+    history.unshift(
+      snapshot
+    );
+  }
+
+  safeWriteList(
+    'desafiosx3_history',
+    history
+  );
+
+  const active =
+    safeReadList(
+      'desafiosx3_active'
+    )
+    .filter(
+      x =>
+        Number(x.id) !==
+        Number(challenge.id)
+    );
+
+  safeWriteList(
+    'desafiosx3_active',
+    active
+  );
+
+  localStorage.removeItem(
+    'desafiosx3_selected_id'
+  );
+
+  localStorage.setItem(
+    'desafiosx3_result_id',
+    String(challenge.id)
+  );
+
+  location.href =
+    'resultado.html';
+}
+
+/* =========================
+   INICIAR
+   ========================= */
+
+render();
+
+</script>
+
+</body>
+</html>

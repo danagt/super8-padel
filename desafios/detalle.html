@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+
+  <title>Desafíos x 3 - Detalle del juego</title>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="header-row">
+      <div class="header-title">
+        <span class="header-icon">
+          <i data-lucide=""></i>
+        </span>
+        <div class="header-text">
+          <h1>Desafíos x 3 - Detalle</h1>
+          <small></small>
+        </div>
+      </div>
+      <a
+        class="btn ghost"
+        href="../historial.html"
+      >
+        <i data-lucide="arrow-left"></i>
+        Historial
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- DATOS DEL JUEGO -->
+
+  <div class="card">
+    <h2 id="challengeName"></h2>
+    <div
+      class="info-grid"
+      style="margin-top:16px"
+    >
+      <div class="info-box">
+        <div class="info-label">
+          Fecha
+        </div>
+        <div
+          id="challengeDate"
+          class="info-value"
+        ></div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">
+          Modalidad
+        </div>
+        <div class="info-value">
+          Desafíos x 3
+        </div>
+      </div>
+      
+      <div class="info-box">
+        <div class="info-label">
+          Estado
+        </div>
+        <div class="info-value">
+          <span class="badge done">
+            Finalizado
+          </span>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-label">
+          Duración prevista
+        </div>
+        <div
+          id="challengeDuration"
+          class="info-value"
+        ></div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-label">
+          Partidos jugados
+        </div>
+        <div
+          id="challengeMatches"
+          class="info-value"
+        ></div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- CLASIFICACIÓN -->
+
+  <div class="card">
+    <h2>Clasificación final</h2>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Pos.</th>
+            <th>Pareja</th>
+            <th>PJ</th>
+            <th>PG</th>
+            <th>PP</th>
+          </tr>
+        </thead>
+        <tbody id="classification"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PARTIDOS -->
+
+  <div class="card">
+    <h2>Partidos</h2>
+    <div id="matches"></div>
+  </div>
+
+  <!-- DESEMPATES -->
+
+  <div
+    id="tieCard"
+    class="card"
+    style="display:none"
+  >
+    <h2>Desempates</h2>
+    <div id="tieMatches"></div>
+  </div>
+
+  <!-- BOTONES -->
+
+  <div class="card">
+    <div class="actions">
+      <a
+        class="btn primary"
+        href="../historial.html"
+      >
+        <i data-lucide=""></i>
+        Historial
+      </a>
+      <a
+        class="btn accent"
+        href="../inicio.html"
+      >
+        <i data-lucide=""></i>
+        Inicio
+      </a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    © 2026 Dana Grecco
+  </div>
+</footer>
+
+<script src="../assets/js/lucide.min.js"></script>
+
+<script>
+
+  /* =============================
+     LOCAL STORAGE
+     ============================= */
+
+  function safeReadList(key) {
+    try {
+      const raw =
+        localStorage.getItem(key);
+      if (!raw)
+        return [];
+
+      const parsed =
+        JSON.parse(raw);
+
+      return Array.isArray(parsed)
+        ? parsed
+        : [];
+
+    } catch (error) {
+      console.error(
+        `No se pudo leer ${key}:`,
+        error
+      );
+      return [];
+    }
+  }
+
+  function formatDate(v) {
+    if (!v)
+      return '';
+    const p =
+      v.split('-');
+    return p.length === 3
+      ? `${p[2]}/${p[1]}/${p[0]}`
+      : v;
+  }
+
+  /* =============================
+     DATOS
+     ============================= */
+
+  const id =
+    Number(
+      localStorage.getItem(
+        'desafiosx3_result_id'
+      )
+    );
+
+  const history =
+    safeReadList(
+      'desafiosx3_history'
+    );
+
+  const data =
+    history.find(
+      x =>
+        Number(x.id) === id
+    ) || null;
+
+  if (!data) {
+    location.href =
+      '../historial.html';
+  }
+
+  /* =============================
+     UTILIDADES
+     ============================= */
+
+  function getPair(id) {
+    return data.pairs.find(
+      p => p.id === id
+    );
+  }
+
+  function baseOrder() {
+    return [
+      ...data.pairs
+    ].sort((a, b) => {
+      if (b.won !== a.won)
+        return b.won - a.won;
+      return a.name.localeCompare(
+        b.name,
+        'es'
+      );
+    });
+  }
+
+  function displayOrder() {
+    const winner =
+      getPair(
+        data.winnerId
+      );
+
+    if (!winner)
+      return baseOrder();
+
+    const rest =
+      baseOrder()
+        .filter(
+          p =>
+            p.id !== winner.id
+        );
+
+    return [
+      winner,
+      ...rest
+    ];
+  }
+
+  function positionLabels(order) {
+    const labels = [
+      '1°',
+      '2°',
+      '3°'
+    ];
+
+    /*
+      No hay desempate para
+      segundo y tercer puesto.
+    */
+
+    if (
+      order.length >= 3 &&
+      order[1].won === order[2].won
+    ) {
+      labels[1] =
+        '2° compartido';
+      labels[2] =
+        '2° compartido';
+    }
+    return labels;
+  }
+
+  /* =============================
+     DATOS GENERALES
+     ============================= */
+
+  function renderInfo() {
+
+    document.getElementById(
+      'challengeName'
+    ).textContent =
+      data.name;
+
+    document.getElementById(
+      'challengeDate'
+    ).textContent =
+      formatDate(
+        data.date
+      );
+   
+    document.getElementById(
+      'challengeDuration'
+    ).textContent =
+      data.durationMinutes
+        ? `${data.durationMinutes} minutos`
+        : '-';
+
+    document.getElementById(
+      'challengeMatches'
+    ).textContent =
+      `${data.matches?.length || 0}`;
+  }
+ 
+  /* =============================
+     CLASIFICACIÓN
+     ============================= */
+
+  function renderClassification() {
+    const order =
+      displayOrder();
+
+    const labels =
+      positionLabels(
+        order
+      );
+    document.getElementById(
+      'classification'
+    ).innerHTML =
+      order.map(
+        (p, i) => `
+          <tr>
+            <td class="position">
+              ${labels[i]}
+            </td>
+            <td>
+              ${p.name}
+            </td>
+            <td>
+              ${p.played}
+            </td>
+            <td>
+              ${p.won}
+            </td>
+            <td>
+              ${p.lost}
+            </td>
+          </tr>
+        `
+      ).join('');
+  }
+
+  /* =============================
+     PARTIDOS
+     ============================= */
+
+  function renderMatches() {
+    const matches =
+      data.matches || [];
+    const box =
+      document.getElementById(
+        'matches'
+      );
+    if (!matches.length) {
+      box.innerHTML =
+        '<p class="muted">No hay partidos registrados.</p>';
+      return;
+    }
+
+    box.innerHTML =
+      matches.map(
+        m => {
+          const winner =
+            getPair(m.winner);
+          return `
+            <div class="match-item">
+              <div class="match-number">
+                Partido ${m.number}
+              </div>
+              <div class="match-result">
+                Ganó: ${winner ? winner.name : '-'}
+              </div>
+            </div>
+          `;
+        }
+      ).join('');
+  }
+
+
+  /* =============================
+     DESEMPATES
+     ============================= */
+
+  function renderTieBreaks() {
+    const matches =
+      data.tieBreakMatches || [];
+    if (!matches.length)
+      return;
+    document.getElementById(
+      'tieCard'
+    ).style.display =
+      'block';
+    document.getElementById(
+      'tieMatches'
+    ).innerHTML =
+      matches.map(
+        (m, i) => {
+          const winner =
+            getPair(m.winner);
+          return `
+            <div class="match-item">
+              <div class="match-number">
+                Desempate ${i + 1}
+              </div>
+              <div class="match-result">
+                Ganó: ${winner ? winner.name : '-'}
+              </div>
+            </div>
+          `;
+        }
+      ).join('');
+  }
+
+  /* =============================
+     INICIAR
+     ============================= */
+
+  renderInfo();
+  renderClassification();
+  renderMatches();
+  renderTieBreaks();
+
+  lucide.createIcons();
+
+</script>
+</body>
+</html>
