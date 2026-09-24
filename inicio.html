@@ -96,6 +96,25 @@
       color: var(--redwood)
     }
 
+    .footer-links {
+      margin-top: 7px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--redwood);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
     .card {
       background: var(--card);
       border: 1px solid rgba(153, 189, 176, .4);
@@ -706,14 +725,29 @@
 
   <footer>
     <div class="wrap">
+
       <div>© 2026 Dana Grecco</div>
 
-      <div style="margin-top:6px;">
-        <a href="acerca.html" style="color:var(--redwood); text-decoration:none; font-weight:bold;">
-          <i data-lucide="mail"></i>
-          Contacto
+      <div class="footer-links">
+
+        <a href="acerca.html">
+          Acerca de
         </a>
+
+        <span>·</span>
+
+        <a href="preguntas-frecuentes.html">
+          Preguntas frecuentes
+        </a>
+
+        <span>·</span>
+
+        <a href="privacidad.html">
+          Política de privacidad
+        </a>
+
       </div>
+
     </div>
   </footer>
 
