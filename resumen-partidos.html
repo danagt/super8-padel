@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Super 8 Padel - Resumen de partidos</title>
+  <style>
+    :root {
+      --caribbean: #0a6772;
+      --cambridge: #99bdb0;
+      --sienna: #df8869;
+      --redwood: #a44a47;
+      --bg: #f7f4ee;
+      --card: #fffdf9;
+      --text: #2f3a3c;
+      --muted: #6f7d7b
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text)
+    }
+
+    header {
+      background: var(--caribbean);
+      color: #fff;
+      padding: 16px
+    }
+
+    header .wrap,
+    main,
+    footer .wrap {
+      max-width: 820px;
+      margin: auto
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px
+    }
+
+    .header-text h1 {
+      margin: 0;
+      font-size: 20px
+    }
+
+    .header-text small {
+      display: block;
+      margin-top: 2px;
+      font-size: 13px;
+      color: #e7f1ee
+    }
+
+    main {
+      padding: 16px 16px 30px
+    }
+
+    footer {
+      padding: 8px 16px 28px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--redwood)
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(153, 189, 176, .4);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 5px 20px rgba(10, 103, 114, .08)
+    }
+
+    h2 {
+      margin: 0;
+      color: var(--caribbean);
+      font-size: 18px
+    }
+
+    .game-meta {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .round-title {
+      color: var(--caribbean);
+      font-size: 13px;
+      font-weight: bold;
+      margin: 14px 0 6px
+    }
+
+    .round-title:first-child {
+      margin-top: 0
+    }
+
+    .matches-grid {
+      display: grid;
+      gap: 5px;
+    }
+
+    .matches-grid.individual {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .matches-grid.pairs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .match-card {
+      background: #f9fcfa;
+      border: 1px solid var(--cambridge);
+      border-radius: 9px;
+      padding: 6px;
+      min-width: 0
+    }
+
+    .match-number {
+      font-size: 9px;
+      color: var(--muted);
+      font-weight: bold;
+      margin-bottom: 2px
+    }
+
+    .match-line {
+      display: grid;
+      grid-template-columns: 
+        minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      line-height: 1.15;
+    }
+
+    .match-line .team-a {
+      text-align: right;
+      word-break: normal;
+      overflow-wrap: break-word;
+    }
+
+    .match-line .team-b {
+      text-align: left;
+      word-break: normal;
+      overflow-wrap: break-word;
+    }
+
+    .match-score {
+      margin: 0;
+      font-size: 12px;
+      font-weight: bold;
+      color: var(--caribbean);
+      white-space: nowrap;
+    }
+
+    .winner-team {
+      color: var(--sienna);
+      font-weight: bold;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 16px
+    }
+
+    a.btn {
+      display: inline-block;
+      text-decoration: none;
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-weight: bold;
+      cursor: pointer
+    }
+
+    .primary {
+      background: var(--caribbean);
+      color: #fff
+    }
+
+    .secondary {
+      background: var(--cambridge);
+      color: #163c3f
+    }
+
+    .ghost {
+      background: transparent;
+      color: white;
+      border: none
+    }
+
+    svg.lucide {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+      vertical-align: middle
+    }
+
+    a.btn svg.lucide {
+      margin-right: 5px
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 20px 0
+    }
+
+    @media(max-width:600px) {
+      header {
+        padding: 12px 14px
+      }
+
+      .header-text h1 {
+        font-size: 17px
+      }
+
+      .header-text small {
+        font-size: 12px
+      }
+
+      main {
+        padding: 12px 12px 22px
+      }
+
+      .card {
+        padding: 12px;
+        margin-bottom: 12px;
+        border-radius: 16px
+      }
+
+      .match-card {
+        padding: 5px
+      }
+
+      .match-number {
+        font-size: 9px;
+      }
+
+      .match-line {
+        font-size: 11px;
+      }
+
+      .match-score {
+        font-size: 12px;
+      }
+
+      .actions {
+        flex-direction: column;
+        align-items: center
+      }
+
+      .actions .btn {
+        width: 100%;
+        max-width: 280px;
+        text-align: center
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap">
+      <div class="header-row">
+        <div class="header-text">
+          <h1>Resumen de partidos</h1><small id="headerSubtitle"></small>
+        </div>
+        <a class="btn ghost" href="detalle.html">
+          <i data-lucide=""></i>
+          Detalle
+        </a>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="card">
+      <h2 id="tournamentName"></h2>
+      <div id="gameMeta" class="game-meta"></div>
+    </div>
+    <div class="card">
+      <div id="roundsContainer"></div>
+      <div class="actions">
+        <a class="btn primary" href="detalle.html">
+          <i data-lucide=""></i>
+          Volver al detalle
+        </a>
+        <a class="btn secondary" href="historial.html">
+          <i data-lucide=""></i>
+          Historial
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">© 2026 Dana Grecco</div>
+  </footer>
+
+  <script>
+    function getTournaments() { 
+      return JSON.parse(localStorage.getItem('super8_tournaments') || '[]') }
+    
+      function getCurrentId() { return localStorage.getItem('super8_current_id') }
+    
+      function getCurrentTournament() { const id = getCurrentId(); if (!id) return null; return getTournaments().find(t => String(t.id) === String(id)) || null }
+    
+      function formatDate(v) { if (!v) return ''; const p = v.split('-'); return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : v }
+    
+      const individualFixture = [
+        [[1, 2, 3, 4], [5, 6, 7, 8]], 
+        [[1, 3, 5, 7], [2, 4, 6, 8]], 
+        [[2, 3, 6, 7], [1, 4, 5, 8]], 
+        [[1, 5, 2, 6], [3, 7, 4, 8]], 
+        [[2, 5, 4, 7], [1, 6, 3, 8]], 
+        [[2, 8, 3, 5], [1, 7, 4, 6]], 
+        [[3, 6, 4, 5], [1, 8, 2, 7]]
+      ];
+
+    const pairsFixture = [
+      [[1, 2], [3, 4], [5, 6], [7, 8]], 
+      [[1, 3], [2, 4], [5, 7], [6, 8]], 
+      [[1, 4], [2, 3], [5, 8], [6, 7]], 
+      [[1, 5], [2, 6], [3, 7], [4, 8]], 
+      [[1, 6], [2, 5], [3, 8], [4, 7]], 
+      [[1, 7], [2, 8], [3, 5], [4, 6]], [[1, 8], [2, 7], [3, 6], [4, 5]]
+    ];
+
+    const data = getCurrentTournament(); if (!data) { location.href = 'historial.html' }
+
+    function displayEntity(id) { if (data.mode === 'pairs') { const p = data.pairs[id - 1]; return `${p.member1} / ${p.member2}` } return data.players[id - 1] }
+
+    function renderHeader() { const mode = data.mode === 'pairs' ? 'Por parejas' : 'Individual'; document.getElementById('tournamentName').textContent = data.name; document.getElementById('headerSubtitle').textContent = mode; document.getElementById('gameMeta').textContent = `${formatDate(data.date)} · ${mode} · ${data.target} puntos` }
+    
+    function renderRounds() {
+
+      const container =
+        document.getElementById('roundsContainer');
+
+      const fixture =
+        data.mode === 'pairs'
+          ? pairsFixture
+          : individualFixture;
+
+      const html = fixture.map((round, ri) => {
+
+        const matches = round.map((match, mi) => {
+
+          const result =
+            data.results[`r${ri + 1}m${mi + 1}`];
+
+          if (!result || !result.valid) {
+
+            return `
+              <div class="match-card">
+                <div class="match-number">
+                  Partido ${mi + 1}
+                </div>
+
+                <div class="match-line">
+                  Sin resultado
+                </div>
+              </div>
+            `;
+          }
+
+          let teamA = '';
+          let teamB = '';
+
+          if (data.mode === 'pairs') {
+
+            teamA = displayEntity(match[0]);
+            teamB = displayEntity(match[1]);
+
+          } else {
+
+            teamA =
+              `${displayEntity(match[0])} / ${displayEntity(match[1])}`;
+
+            teamB =
+              `${displayEntity(match[2])} / ${displayEntity(match[3])}`;
+          }
+
+          const teamAClass =
+            result.a > result.b
+              ? 'winner-team'
+              : '';
+
+          const teamBClass =
+            result.b > result.a
+              ? 'winner-team'
+              : '';
+
+          return `
+            <div class="match-card">
+
+              <div class="match-number">
+                Partido ${mi + 1}
+              </div>
+
+              <div class="match-line">
+
+                <span class="team-a ${teamAClass}">
+                  ${teamA}
+                </span>
+
+                <span class="match-score">
+                  ${result.a} - ${result.b}
+                </span>
+
+                <span class="team-b ${teamBClass}">
+                  ${teamB}
+                </span>
+
+              </div>
+
+            </div>
+          `;
+
+        }).join('');
+
+        return `
+          <div class="round-title">
+            Ronda ${ri + 1}
+          </div>
+
+          <div class="matches-grid ${data.mode === 'pairs' ? 'pairs' : 'individual'}">
+            ${matches}
+          </div>
+        `;
+
+      }).join('');
+
+      container.innerHTML =
+        html ||
+        '<div class="empty">No hay partidos para mostrar.</div>';
+    }
+  
+  renderHeader();
+  renderRounds();
+
+  </script>
+
+  <script src="assets/js/lucide.min.js"></script>
+  <script>lucide.createIcons();</script>
+
+</body>
+
+</html>
