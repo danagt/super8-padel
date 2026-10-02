@@ -655,6 +655,7 @@
               <th id="entityHeader"></th>
               <th>PJ</th>
               <th>PG</th>
+              <th>PP</th>
               <th>A favor</th>
               <th>En contra</th>
               <th>Dif.</th>
@@ -663,13 +664,21 @@
           <tbody id="ranking"></tbody>
         </table>
       </div>
-      <p class="muted"><strong>Desempate:</strong> ganados → diferencia → empate → juegos a favor → menos juegos en contra.</p>
+      <!-- <p class="muted"><strong>Desempate:</strong> ganados → diferencia → empate → juegos a favor → menos juegos en contra.</p> -->
     </div>
 
     <div class="card">
       <div class="actions"><a class="btn secondary" href="rondas.html">
           <i data-lucide=""></i>
           Corregir resultados
+        </a>
+        <a 
+          id="finishBtn"
+          class="btn danger"
+          href=""
+          onclick="finishTournament(); return false;">
+          <i data-lucide=""></i>
+          Finalizar torneo
         </a>
         <a id="podiumBtn" class="btn primary" href="podio.html">
           <i data-lucide=""></i>
@@ -741,22 +750,49 @@
       const fixture = getFixture(data), results = data.results || {};
       let s = [];
       if (data.mode === 'pairs') {
-        s = data.pairs.map((p, i) => ({ id: i + 1, name: `${p.member1} / ${p.member2}`, pj: 0, pg: 0, gf: 0, gc: 0, diff: 0 }));
+        s = data.pairs.map((p, i) => ({ 
+        id: i + 1, 
+        name: `${p.member1} / ${p.member2}`, 
+        pj: 0, 
+        pg: 0, 
+        pp: 0,
+        gf: 0, 
+        gc: 0, 
+        diff: 0 
+      }));
+
       } else {
         s = data.players.map((name, i) => ({ id: i + 1, name, pj: 0, pg: 0, gf: 0, gc: 0, diff: 0 }));
       }
       let h = {};
 
       fixture.forEach((r, ri) => r.forEach((m, mi) => {
-        let z = results[`r${ri + 1}m${mi + 1}`]; if (!z || !z.valid) return;
+        let z = results[`r${ri + 1}m${mi + 1}`];
+
+        if (
+          !z ||
+          !z.valid ||
+          (Number(z.a) === 0 && Number(z.b) === 0)
+        ) {
+          return;
+        }
 
         if (data.mode === 'pairs') {
           const a = m[0], b = m[1];
           s[a - 1].pj++; s[b - 1].pj++;
           s[a - 1].gf += z.a; s[a - 1].gc += z.b;
           s[b - 1].gf += z.b; s[b - 1].gc += z.a;
-          if (z.a > z.b) s[a - 1].pg++;
-          if (z.b > z.a) s[b - 1].pg++;
+
+          if (z.a > z.b) {
+            s[a - 1].pg++;
+            s[b - 1].pp++;
+          }
+
+          if (z.b > z.a) {
+            s[b - 1].pg++;
+            s[a - 1].pp++;
+          }
+
           const k = [Math.min(a, b), Math.max(a, b)].join('-');
           (h[k] ??= []).push(z.a > z.b ? a : z.b > z.a ? b : null);
         } else {
@@ -776,26 +812,63 @@
       s.forEach(x => x.diff = x.gf - x.gc);
 
       s.sort((x, y) => {
-        if (y.pg !== x.pg) return y.pg - x.pg;
-        if (y.diff !== x.diff) return y.diff - x.diff;
-        const tied = s.filter(q => q.pg === x.pg && q.diff === x.diff);
-        if (tied.length === 2) {
-          const k = [Math.min(x.id, y.id), Math.max(x.id, y.id)].join('-');
-          const meetings = h[k] || [];
-          if (meetings.length) {
-            const wx = meetings.filter(v => v === x.id).length;
-            const wy = meetings.filter(v => v === y.id).length;
-            if (wx !== wy) return wy - wx;
-          }
+        if (x.gc !== y.gc) {
+          return x.gc - y.gc;
         }
-        if (y.gf !== x.gf) return y.gf - x.gf;
-        if (x.gc !== y.gc) return x.gc - y.gc;
+
         return x.name.localeCompare(y.name, 'es');
       });
+
       return s;
     }
 
+    function finishTournament() {
+
+      if (data.mode !== 'pairs') {
+        return;
+      }
+
+      const played = Object.values(data.results || {})
+        .filter(x =>
+          x &&
+          x.valid &&
+          !(Number(x.a) === 0 && Number(x.b) === 0)
+        )
+        .length;
+
+      if (played === 0) {
+        alert('Todavía no hay partidos jugados.');
+        return;
+      }
+
+      const ok = confirm(
+        '¿Querés finalizar el Super 8 por parejas?\n\n' +
+        'La clasificación se calculará solamente con los partidos jugados hasta este momento.'
+      );
+
+      if (!ok) {
+        return;
+      }
+
+      data.status = 'Finalizado';
+      data.manualFinalized = true;
+
+      saveTournamentObject(data);
+
+      location.reload();
+    }
+
     const data = getCurrentTournament();
+
+    const finishBtn = document.getElementById('finishBtn');
+
+      if (
+        data.mode !== 'pairs' ||
+        data.status === 'Finalizado'
+      ) {
+        finishBtn.style.display = 'none';
+      }
+ 
     if (!data) location.href = 'inicio.html';
 
     const s = calculateStats(data),
@@ -824,12 +897,16 @@
       <td>${x.name}</td>
       <td>${x.pj}</td>
       <td>${x.pg}</td>
+      <td>${x.pp}</td>
       <td>${x.gf}</td>
       <td>${x.gc}</td>
       <td>${x.diff > 0 ? '+' : ''}${x.diff}</td>
       </tr>`).join('');
 
-    if (validCount !== total) {
+    if (
+      validCount !== total &&
+      data.status !== 'Finalizado'
+    ) {
 
       const pendingMsg =
         document.getElementById('pendingMsg');
