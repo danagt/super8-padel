@@ -347,6 +347,41 @@
       );
     }
 
+    
+    function formatName(value) {
+      return value
+        .trim()
+        .toLowerCase()
+        .split(/\s+/)
+        .map(palabra =>
+          palabra.charAt(0).toUpperCase() + palabra.slice(1)
+        )
+        .join(' ');
+    }
+
+    const nameInputs = [
+      document.getElementById('p1a'),
+      document.getElementById('p1b'),
+      document.getElementById('p2a'),
+      document.getElementById('p2b'),
+      document.getElementById('p3a'),
+      document.getElementById('p3b')
+    ];
+
+    nameInputs.forEach(input => {
+      input.addEventListener('blur', () => {
+        input.value = formatName(input.value);
+      });
+    });
+
+    const challengeNameInput =
+      document.getElementById('name');
+
+    challengeNameInput.addEventListener('blur', () => {
+      challengeNameInput.value =
+        formatName(challengeNameInput.value);
+    });
+
     /* =========================
        AVANCE ENTRE CAMPOS
        CELULAR / TECLADO
@@ -533,9 +568,9 @@
         gameType:
           'desafiosx3',
         name:
-          document.getElementById(
+          formatName(document.getElementById(
             'name'
-          ).value.trim() ||
+          ).value) ||
           'Desafíos x 3',
         date:
           document.getElementById(

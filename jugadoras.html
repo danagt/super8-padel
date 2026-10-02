@@ -825,6 +825,9 @@
     }
     renderEntries();
     activarAvanceFormulario();
+    activarFormatoNombres();
+
+
     if (window.matchMedia('(max-width: 600px)').matches) {
       setTimeout(() => {
         document.getElementById('tname').focus();
@@ -842,10 +845,60 @@
 
     let pendingTournament = null;
 
+    function formatName(value) {
+      return value
+        .trim()
+        .toLowerCase()
+        .split(/\s+/)
+        .map(palabra =>
+          palabra.charAt(0).toUpperCase() + palabra.slice(1)
+        )
+        .join(' ');
+    }
+
+    const tournamentNameInput =
+      document.getElementById('tname');
+
+    tournamentNameInput.addEventListener('blur', () => {
+      tournamentNameInput.value =
+        formatName(tournamentNameInput.value);
+    });
+
+    function activarFormatoNombres() {
+
+      let inputs = [];
+
+      if (mode === 'pairs') {
+
+        for (let i = 1; i <= 8; i++) {
+          inputs.push(
+            document.getElementById(`p${i}a`),
+            document.getElementById(`p${i}b`)
+          );
+        }
+
+      } else {
+
+        for (let i = 1; i <= 8; i++) {
+          inputs.push(
+            document.getElementById(`p${i}`)
+          );
+        }
+      }
+
+      inputs.forEach(input => {
+
+        input.addEventListener('blur', () => {
+          input.value = formatName(input.value);
+        });
+
+      });
+    }
+
     function createTournament() {
 
       const name =
-        document.getElementById('tname').value.trim() || 'Super 8 Padel';
+        formatName(document.getElementById('tname').value) || 'Super 8 Padel';
 
       const date =
         document.getElementById('tdate').value;
@@ -882,10 +935,10 @@
         for (let i = 1; i <= 8; i++) {
 
           const a =
-            document.getElementById(`p${i}a`).value.trim();
+            formatName(document.getElementById(`p${i}a`).value);
 
           const b =
-            document.getElementById(`p${i}b`).value.trim();
+            formatName(document.getElementById(`p${i}b`).value);
 
 
           if (!a || !b) {
@@ -930,7 +983,7 @@
         for (let i = 1; i <= 8; i++) {
 
           const v =
-            document.getElementById('p' + i).value.trim();
+            formatName(document.getElementById('p' + i).value);
 
 
           if (!v) {
