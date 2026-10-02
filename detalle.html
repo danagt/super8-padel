@@ -754,70 +754,31 @@
 
       let stats = calculateStats();
 
-      stats.sort((a, b) => {
+      if (data.mode === 'pairs') {
 
-        if (b.pg !== a.pg)
-          return b.pg - a.pg;
-
-        if (b.diff !== a.diff)
-          return b.diff - a.diff;
-
-        return 0;
-      });
-
-      let start = 0;
-
-      while (start < stats.length) {
-
-        let end = start + 1;
-
-        while (
-          end < stats.length &&
-          stats[end].pg === stats[start].pg &&
-          stats[end].diff === stats[start].diff
-        ) {
-          end++;
-        }
-
-        const group =
-          stats.slice(start, end);
-
-        if (group.length === 2) {
-
-          const winner =
-            directWinner(
-              group[0].id,
-              group[1].id
-            );
-
-          if (
-            winner &&
-            group[1].id === winner
-          ) {
-
-            stats[start] = group[1];
-            stats[start + 1] = group[0];
-
+        stats.sort((a, b) => {
+          if (a.gc !== b.gc) {
+            return a.gc - b.gc;
           }
 
-        } else if (group.length > 1) {
+          return a.name.localeCompare(
+            b.name,
+            'es'
+          );
+        });
 
-          group.sort((a, b) => {
+      } else {
 
-            if (b.gf !== a.gf)
-              return b.gf - a.gf;
+        stats.sort((a, b) => {
 
-            return a.gc - b.gc;
+          if (b.pg !== a.pg)
+            return b.pg - a.pg;
 
-          });
+          if (b.diff !== a.diff)
+            return b.diff - a.diff;
 
-          group.forEach((player, index) => {
-            stats[start + index] = player;
-          });
-        }
-
-        start = end;
-
+          return 0;
+        });
       }
 
       return stats;
@@ -832,6 +793,30 @@
       const ranking =
         calculateRanking();
 
+      if (data.mode === 'pairs') {
+
+        ranking.forEach((p, i) => {
+
+          if (
+            i > 0 &&
+            p.gc === ranking[i - 1].gc
+          ) {
+            p.position =
+              ranking[i - 1].position;
+          } else {
+            p.position = i + 1;
+          }
+
+        });
+
+      } else {
+
+        ranking.forEach((p, i) => {
+          p.position = i + 1;
+        });
+
+      }  
+
       const tbody =
         document.getElementById('classification');
 
@@ -842,7 +827,7 @@
             <tr>
 
               <td class="position">
-                ${i + 1}°
+                ${p.position}°
               </td>
 
               <td>
