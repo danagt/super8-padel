@@ -2,3 +2,5 @@ node_modules/
 www/
 .firebase/
 android/app/.idea/
+android/keystore.properties
+android/super8-release-key.jks
