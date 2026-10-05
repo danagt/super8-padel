@@ -1,3 +1,4 @@
 node_modules/
 www/
 .firebase/
+android/app/.idea/
